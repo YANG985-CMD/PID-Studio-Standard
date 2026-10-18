@@ -6,9 +6,9 @@
 | :---: | :---: |
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> | <a href="assets/support/wechat.png"><img src="assets/support/wechat.png" width="280" alt="微信收款码"></a> |
 
-制作不易，请大家点个关注。小红书、B站、抖音搜索：**电机的主人**。
+小红书、B站、抖音搜索：**电机的主人**。
 
-本仓库提供普通版软件、配套 MCP 及下载说明，不公开应用实现源码。软件和 MCP 可免费使用，无需开发密码或企业授权。
+本仓库提供软件、配套 MCP 及下载说明，不公开应用实现源码。软件和 MCP 可免费使用，无需开发密码或企业授权。
 
 ## Windows 下载
 
@@ -16,7 +16,7 @@
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 普通版软件](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/PIDStudio_Standard_App_V1.5.9_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/PIDStudio_Standard_App_V1.5.9_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
 | [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/PIDStudio_Standard_MCP_V1.5.9_Windows.zip) | 供 Codex 等 MCP 客户端连接普通版，包含连续 AI 调参接口 |
 | [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/SHA256SUMS.txt) | 核对下载文件完整性 |
 
