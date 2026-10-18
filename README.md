@@ -6,15 +6,19 @@
 
 ## Windows 下载
 
-当前版本：**V1.5.3**，Windows x64。
+当前版本：**V1.5.4**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 普通版软件](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.3/PIDStudio_Standard_App_V1.5.3_Windows.zip) | 手动 PID 调参、实时波形、分析和手动 AI 诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.3/PIDStudio_Standard_MCP_V1.5.3_Windows.zip) | 供 Codex 等 MCP 客户端连接普通版使用 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.3/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 普通版软件](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.4/PIDStudio_Standard_App_V1.5.4_Windows.zip) | 手动 PID 调参、实时波形、分析和手动 AI 诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.4/PIDStudio_Standard_MCP_V1.5.4_Windows.zip) | 供 Codex 等 MCP 客户端连接普通版使用 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.4/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部下载见 [最新发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/latest)。
+
+## V1.5.4 更新
+
+七种接收格式均提供内嵌、可复制的 C 示例与配置对照。Lxy 推荐用于文本调试，Yzx 推荐用于高速多通道波形。MCP 新增 `list_protocol_examples`、`get_protocol_example` 和 `pidstudio://protocols`，可读取同一份 C 示例及配套文件；普通版为 25 工具、5 资源。更新后重新加载 MCP。
 
 ## 使用
 
