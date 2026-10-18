@@ -12,34 +12,35 @@
 
 ## Windows 下载
 
-当前版本：**V1.5.8**，Windows x64。
+当前版本：**V1.5.9**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 普通版软件](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.8/PIDStudio_Standard_App_V1.5.8_Windows.zip) | PID 参数调试、实时波形、分析和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.8/PIDStudio_Standard_MCP_V1.5.8_Windows.zip) | 供 Codex 等 MCP 客户端连接普通版，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.8/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 普通版软件](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/PIDStudio_Standard_App_V1.5.9_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/PIDStudio_Standard_MCP_V1.5.9_Windows.zip) | 供 Codex 等 MCP 客户端连接普通版，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.9/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
-## V1.5.8 更新
+## V1.5.9 更新
 
-- 打开串口成功后自动开始采集，关闭时停止并保存实验。
-- 参数和 AI 权限统一设置，支持 P / PI / PID 及逐项选择读取参数；读取值原样显示。
-- 新增蓝色“一键配置”：先打开串口，再读取勾选参数，自动同步参数、诊断权限和 MCP 权限页中的可计算项。
-- 默认调节步长按初始值绝对值的 1% 对齐设备精度；滑条范围为初始值 ± 步长 × 100，AI 单次变化上限为步长 × 10，范围保留设备及人工限制。
-- 诊断目标提供七个常用选项，也可自定义。点击“诊断选定波形”发送本次选定摘要与参数，诊断报告精简显示。
-- 配套 MCP 更新为 **29 个工具 / 5 个资源**，支持人工确认范围后的连续 AI 调参。
+- 一键配置先弹出 **P / PI / PID** 选项，再自动勾选并读取对应参数及目标值，不再自动猜测模式。
+- 读不到的项提示“未读取到，请自行设置”，保留所选模式、勾选和原数值；成功项同步后面三个设置页。
+- 主界面与参数设置共用一个可编辑步长；一键读取成功后默认按初始值绝对值的 1% 计算，支持更小步长和普通小数显示。
+- 两套 AI 单次变化上限默认 **步长 × 10**，可分别手动修改。滑条范围仍为初始值 ± 步长 × 100，并受设备及人工范围限制。
+- “通道设置”独立放到“串口设置”右侧，通道列表带下拉箭头；新增通道自动填写后续数字名称与接收位置，可手动修改。
+- 修复暂停视图拖动及实时拖图回弹；蓝框内左键调整选区，中键可拖动整张波形。
+- 移除独立“分析”页面，保留 **参数调试 / AI 诊断**。配套 MCP 同步更新为 V1.5.9，仍提供 **29 个工具 / 5 个资源**。
 
 ## 使用
 
 1. 解压软件包，打开 `PIDStudioStandard/PIDStudioStandard.exe`。
-2. 在“串口设置”和“通信协议”中配置设备，点击“打开串口”即可采集波形。接收格式提供原始接收、Lxy 和 Yzx。
-3. 打开“PID 参数设置”，在参数页勾选需要读取的 P、I、D、目标值，并核对板端地址、类型、范围和最小有效步长。PI 设备可取消 D，无需导入 JSON。
-4. 在“一键配置”页点击“确定配置”，读取成功后同步后面三个设置页。空白项自行填写。
+2. 在“串口设置”“通道设置”和“通信协议”中配置设备，点击“打开串口”即可采集波形。接收格式提供原始接收、Lxy 和 Yzx。
+3. 打开“PID 参数设置”，核对板端地址、数值类型、设备范围与步长。
+4. 在“一键配置”页点击“确定配置”，选择设备使用的 P / PI / PID 模式，随后自动勾选并读取对应参数和目标值；成功项同步后面三个设置页。未读到或空白的项自行填写。
 5. AI 波形诊断先配置自己的 API，在“波形诊断权限”页保存目标、建议权限和参数限制，再选择波形区间并点击诊断。API Key 存入 Windows 凭据存储。
 
-普通版提供“参数调试 / 分析 / AI 诊断”，连续调参由外部 MCP 客户端在你确认的范围内执行。普通版不包含企业版自动优化算法和电机特调模块。
+普通版提供“参数调试 / AI 诊断”，连续调参由外部 MCP 客户端在你确认的范围内执行。普通版不包含企业版自动优化算法和电机特调模块。
 
 ## 配套 MCP
 
