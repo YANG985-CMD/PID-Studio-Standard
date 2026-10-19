@@ -2,9 +2,9 @@
 
 **为爱发电，有条件的可以支持一下回回血，感谢**
 
-| 支付宝 | 微信支付 |
-| :---: | :---: |
-| <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> | <a href="assets/support/wechat.png"><img src="assets/support/wechat.png" width="280" alt="微信收款码"></a> |
+| 支付宝 |
+| :---: |
+| <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
 

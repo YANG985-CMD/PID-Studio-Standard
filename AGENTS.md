@@ -1,6 +1,6 @@
 # 仅发布软件与 MCP 下载包
 
-此仓库为公开下载页，不是应用源码仓库。只跟踪 README.md、LICENSE.txt、AGENTS.md、.gitignore 及用户明确要求公开的 assets/support/alipay.jpg、assets/support/wechat.png 收款码图片；二进制包放入 GitHub Releases，不提交到 Git 历史。
+此仓库为公开下载页，不是应用源码仓库。只跟踪 README.md、LICENSE.txt、AGENTS.md、.gitignore 及用户明确要求公开的 assets/support/alipay.jpg 收款码图片；用户要求只保留支付宝，不再展示或跟踪微信收款码。二进制包放入 GitHub Releases，不提交到 Git 历史。
 
 应用实现只在作者私有仓库开发。不得复制或推送应用代码、构建脚本、开发历史、固件、企业模块、签发工具、私钥、API Key、激活记录或用户实验到本仓库。
 
