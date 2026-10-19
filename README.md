@@ -30,17 +30,20 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.5.11**，Windows x64。
+当前版本：**V1.5.12**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.11/PIDStudio_Standard_App_V1.5.11_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.11/PIDStudio_Standard_MCP_V1.5.11_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.11/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.12/PIDStudio_Standard_App_V1.5.12_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.12/PIDStudio_Standard_MCP_V1.5.12_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.12/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
-## V1.5.11 更新
+## V1.5.12 更新
+
+- 新增 21 个 MCP 工具，覆盖串口扫描与连接错误日志、当前页一键读取配置、波形显示控制、PID 备份管理、离线 CSV / 实验 / 设备管理，以及软件内 AI 连接设置、测试和诊断。现在共 54 个工具、5 个资源。
+- API 密钥由用户在软件密码框输入，只存系统凭据库；不要把密钥交给聊天或工具参数。备份恢复只暂存候选；设备删除、一键配置和 AI 连接改动先审阅确认。
 
 - 新增完整配置读取、配置校验、人工审阅保存配置与连接已保存设备 4 个 MCP 工具。Codex 可提交通道关联、设备能力、安全范围和两套 AI 权限，确认保存后继续连接、采集和读取参数；配置保存不授予硬件写入或连续会话。
 
@@ -50,7 +53,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 - “选择分析区间”移到诊断按钮左侧，未开启浅蓝、开启深蓝。拖图只停止自动跟随，数据继续刷新；“暂停视图”才冻结显示，“自动缩放”恢复跟随。
 - 波形诊断可在选区内定位目标阶跃；明确通道关联保留，通道身份有歧义时需核对。历史回放可对当前连接设备审阅和确认参数，历史数据与实时采集分开。
 - “控制与安全”位于 AI 诊断的“测试连接”右侧。右键删除已保存实验无需二次确认，正在采集的实验保留。
-- 软件与配套 MCP 同步为 **V1.5.11**，提供 **33 个工具 / 5 个资源**；工具说明、能力信息和随包指南同步当前操作。
+- 软件与配套 MCP 同步为 **V1.5.12**，提供 **54 个工具 / 5 个资源**；工具说明、能力信息和随包指南同步当前操作。
 
 ## 软件快速上手
 
@@ -112,7 +115,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.5.11 正常应显示 **33 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.5.12 正常应显示 **54 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -131,7 +134,7 @@ open_studio({})
 
 上述为调用顺序示意，`{}` 表示该工具不需要输入参数，不是需要发送到串口的命令。
 
-1. `open_studio` 打开或连接软件，**不会打开串口**。需要连接时，先读取并核对完整配置，再用 `connect_device` 打开已保存串口。需要改配置或权限时按下一节提交人工审阅；一键读取并配置当前页仍由软件设置页操作。
+1. `open_studio` 打开或连接软件，**不会打开串口**。需要连接时，先读取并核对完整配置，再用 `connect_device` 打开已保存串口。需要改配置或权限时按下一节提交人工审阅；也可用 `read_and_configure_parameters` 指定页面，在软件确认后执行一键读取配置。
 2. 从 `get_studio_status` 核对 `connected`、`acquiring`、`replaying`、`jobs`，区分实时采集和历史回放。不要在已有任务仍运行时重复提交同一操作。
 3. 从 `get_device_definition` 读取实际参数 ID、`task.algorithm`、`task.pid_parameters`、`task.parameter_reads`、`task.roles`、协议字段、读取状态和两套 AI 限制。P / I / D / 目标值是角色，**不保证真实 ID 就叫 Kp / Ki / Kd / setpoint**；也不能把参数地址当成参数 ID。
 4. 从 `get_studio_capabilities` 核对 `app_version`、`companion_version`、`versions_match`、产品标识和能力。版本不匹配时先同步更新两个程序并重新加载 MCP。
@@ -149,6 +152,17 @@ open_studio({})
 5. 保存后重新调用 `get_device_configuration`，用新的版本与当前设备 ID 调用 `connect_device(device_id, expected_revision)`。此工具只打开已保存串口；`started=true` 表示连接开始，用 `get_studio_status` 确认连接与采集结果，再用 `read_parameters` 读实际参数。
 
 配置保存不写板端参数、不启动电机、不授权拖动或连续调参。配置参考值不能当作读回，单次参数下发及连续会话仍按下文确认。`online_tuning.runtime_writes` 必须由实际固件能力支持，不能为了绕过报错而设为 true。新接收格式只允许 raw / lxy / yzx；原始命令模板、插件及凭据不经配置工具修改。审阅期间发生配置 / 设备切换或停止操作，旧提案失效。
+
+### 工作台操作：新增 21 个工具
+
+- **串口诊断**：先用 `list_serial_ports` 枚举端口，再用 `get_connection_diagnostics` 查看当前阶段、最近尝试 / 错误和统计。`get_communication_log(level="ERROR", limit=100)` 获取详细错误，最多 500 条。扫描不打开端口；设备没插入时端口缺失属于正常情况，连接回执 started=true 不表示已连上。
+- **当前页一键配置**：`read_and_configure_parameters(scope, control_type)`，scope 为 parameters / diagnosis / continuous。参数页必须明确提供 P / PI / PID，两个 AI 页用已保存模式。已连接空闲时，在软件确认后读取并只同步此页；保留人工限制，未读到的项明确返回，不发 SET、不授予会话。回执需查询到 completed。
+- **波形显示**：`get_waveform_view` 查询；`set_waveform_view` 可暂停 / 恢复、跟随、自动缩放、设置相对时间范围或返回实时。暂停显示不停止采集。`set_channel_display` 调整颜色（#RRGGBB）及显示隐藏，首批数据前也可设置，不改通道映射。
+- **PID 备份**：`list_parameter_backups(session_id)` 列备份，`restore_parameter_backup(snapshot_id, parameter_ids)` 按当前 AI 权限和范围校验后只暂存到输入调参，真实下发仍需用户确认；`export_parameter_backup` 导出备份或当前显示值到 exports，不读取设备，也不覆盖原文件。
+- **数据与设备**：`import_waveform_csv(path, expected_revision, replay)` 导入用户明确指定的本地绝对 CSV 路径（最多 32 MiB / 200 万通道样本）为离线实验，须断开空闲且配置版本匹配，失败撤销本次新实验；离线数据不用于连续实时调参。`delete_experiment` 按明确实验 ID 和完整名称删除，无二次弹窗，禁止删除当前采集或拿用户数据做测试。`create_device` / `copy_device` 建立定义但不切换和连接；`set_default_device` 只设下次默认；`export_device_configuration` 导出定义；`delete_device` 经用户确认删除定义并保留历史实验。
+- **软件内 AI**：`configure_ai_connection` 提交服务 / 模型 / 地址等设置供用户审阅，request_api_key=true 显示软件密码框，密钥不经聊天、工具参数或回执。`test_ai_connection` 发送无设备数据的最小测试，`diagnose_selected_waveform` 调用软件内 AI 诊断当前选区，二者会使用 API 配额，仅在用户要求时调用。`get_ai_diagnosis` 仅读已有诊断，不发请求，不自动应用建议。
+
+导出工具只接受文件名，使用返回 path；所有 started / running / needs_confirmation 回执都要按原操作 id 查询实际结果。新增工具没有开放任意串口命令、固件烧录、电机启停或代替用户授权。
 
 ### 场景一：查看波形、只做诊断
 
@@ -206,9 +220,9 @@ open_studio({})
 
 连续调参的 `session_id` 要取自 `get_continuous_tuning_state`，不是状态页里的实验 ID。`observation_id` 取当前 `observation.id`。每轮 `step_id` 必须唯一；同一 ID 只能对应完全相同的请求。结果不确定时查询原操作，不更换 ID 重发。
 
-## MCP 工具速查：33 个
+## MCP 工具速查：54 个
 
-`—` 表示无输入参数。下表是 V1.5.11 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表是 V1.5.12 的工具索引；调用时以客户端提供的实际工具 schema 为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
@@ -245,6 +259,27 @@ open_studio({})
 | `get_continuous_tuning_state` | — | 连续授权、计划、约束、实际值与新观察 |
 | `apply_continuous_tuning_step` | `session_id`、`step_id`、`observation_id`、`values`、`reason` | 执行用户已授权会话内的一轮有界写入并独立读回 |
 | `stop_continuous_tuning` | `session_id`；可选 `reason` | 结束本次连续会话，不自动恢复旧参数 |
+| `list_serial_ports` | — | 扫描端口、说明和硬件标识，不打开串口 |
+| `get_connection_diagnostics` | — | 连接阶段、最近尝试 / 错误、统计及阻塞原因 |
+| `get_communication_log` | 可选 `level`、`limit` | 最近日志，最多 500 条，隐藏密钥 |
+| `read_and_configure_parameters` | `scope`；参数页需 `control_type` | 人工确认后只读取并配置指定页面 |
+| `get_waveform_view` | — | 显示状态、范围、通道颜色与显示隐藏 |
+| `set_waveform_view` | 可选 `paused`、`following`、`autoscale`、两个时间边界、`return_to_live` | 调整显示，采集继续 |
+| `set_channel_display` | `channel_id`；可选 `visible`、`color` | 通道显示与 #RRGGBB 颜色 |
+| `list_parameter_backups` | 可选 `session_id` | 列实验备份 ID、名称、时间与数值 |
+| `restore_parameter_backup` | `snapshot_id`；可选 `parameter_ids` | 按 AI 校验暂存备份候选，不直接写设备 |
+| `export_parameter_backup` | 可选 `snapshot_id`、`name` | 导出备份 / 当前显示的 PID 值 |
+| `import_waveform_csv` | `path`、`expected_revision`；可选 `replay` | 导入离线 CSV，失败回滚本次新实验 |
+| `delete_experiment` | `session_id`、`expected_name` | 明确指定后直接删除，禁止当前采集 |
+| `create_device` | `name` | 建立空定义，不选择或连接 |
+| `copy_device` | `device_id`；可选 `name` | 复制定义到新 ID，读回状态重置 |
+| `delete_device` | `device_id`、`expected_name` | 用户在软件确认删除，历史实验保留 |
+| `export_device_configuration` | 可选 `device_id`、`name` | 导出设备 JSON 到 exports，不含 API 密钥 |
+| `set_default_device` | `device_id` | 设置下次启动默认，不立即切换 |
+| `configure_ai_connection` | `provider`、`model`、`reason`；可选连接字段及 `request_api_key` | 审阅保存 AI 设置，密钥仅软件密码框输入 |
+| `test_ai_connection` | — | 发出无设备数据的 API 连接测试 |
+| `diagnose_selected_waveform` | — | 通过已保存 API 诊断选区，不下发参数 |
+| `get_ai_diagnosis` | — | 读取已有结构化诊断和可应用状态 |
 
 工程导入的 `source_folder` 须为实际存在的工程绝对路径，`sources` 形如 `[{"file":"src/control.c","line":42}]`，行号可省略；`parameters` 须提供实际核实的定义，不能只给来源路径而不提供任何参数。来源文件由 AI 在用户授权范围内阅读，MCP 不执行工程源码。
 
@@ -293,7 +328,7 @@ open_studio({})
 | 连续会话不能启动 | 核对该用途权限、目标安全范围、运行中写入能力、遥测、保护阈值和软件返回原因 |
 | 请求超时、返回 running | 用原回执 id 查询 get_operation，不重复发送参数修改 |
 
-更详细说明随压缩包提供：`docs/CODEX_CONTROL.md`、`docs/MCP_DEVICE_CONFIGURATION.md`、`docs/AI_PARAMETER_LIMITS.md`、`docs/MCP_CONTINUOUS_TUNING.md`。
+更详细说明随压缩包提供：`docs/CODEX_CONTROL.md`、`docs/MCP_DEVICE_CONFIGURATION.md`、`docs/MCP_WORKBENCH_TOOLS.md`、`docs/AI_PARAMETER_LIMITS.md`、`docs/MCP_CONTINUOUS_TUNING.md`。
 
 ## 使用许可
 
