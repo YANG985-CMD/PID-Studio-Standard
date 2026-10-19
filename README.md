@@ -16,7 +16,7 @@
 
 PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实现配套通信协议的设备。它显示实时波形、记录实验、读取参数，并在用户确认后下发参数。电脑端选择 P / PI / PID 只改变软件使用哪些参数，不改变设备固件中的控制算法。
 
-配套 MCP 是软件与 AI 客户端之间的连接程序。AI 通过结构化工具读取设备定义、参数、波形和实验记录，进行诊断、提出参数建议，或在用户授权的连续会话内逐轮调参。MCP 程序已打包，使用时无需安装 Python。
+配套 MCP 是软件与 AI 客户端之间的连接程序。AI 通过结构化工具读取设备定义、参数、波形和实验记录，提交设备配置供用户审阅、连接已保存串口，进行诊断、提出参数建议，或在用户授权的连续会话内逐轮调参。MCP 程序已打包，使用时无需安装 Python。
 
 | 使用方式 | 谁进行分析 | 需要什么 |
 | --- | --- | --- |
@@ -30,17 +30,19 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.5.10**，Windows x64。
+当前版本：**V1.5.11**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.10/PIDStudio_Standard_App_V1.5.10_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.10/PIDStudio_Standard_MCP_V1.5.10_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.10/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.11/PIDStudio_Standard_App_V1.5.11_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.11/PIDStudio_Standard_MCP_V1.5.11_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.11/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
-## V1.5.10 更新
+## V1.5.11 更新
+
+- 新增完整配置读取、配置校验、人工审阅保存配置与连接已保存设备 4 个 MCP 工具。Codex 可提交通道关联、设备能力、安全范围和两套 AI 权限，确认保存后继续连接、采集和读取参数；配置保存不授予硬件写入或连续会话。
 
 - 设置窗口保留“参数设置 / 波形诊断权限 / MCP 连续调参权限”三个页面，各页底部金色按钮**只读取并配置当前页**，保留另一用途设置和人工限制。
 - 统一使用“当前参数值”，指设备此刻的 P、I、D（按控制类型读取）及目标值；未读到的项需自行填写。控制类型位于页签左侧，带下拉箭头，并与本页增益勾选双向同步；目标值可独立选择。
@@ -48,7 +50,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 - “选择分析区间”移到诊断按钮左侧，未开启浅蓝、开启深蓝。拖图只停止自动跟随，数据继续刷新；“暂停视图”才冻结显示，“自动缩放”恢复跟随。
 - 波形诊断可在选区内定位目标阶跃；明确通道关联保留，通道身份有歧义时需核对。历史回放可对当前连接设备审阅和确认参数，历史数据与实时采集分开。
 - “控制与安全”位于 AI 诊断的“测试连接”右侧。右键删除已保存实验无需二次确认，正在采集的实验保留。
-- 软件与配套 MCP 同步为 **V1.5.10**，仍提供 **29 个工具 / 5 个资源**；工具说明、能力信息和随包指南同步当前操作。
+- 软件与配套 MCP 同步为 **V1.5.11**，提供 **33 个工具 / 5 个资源**；工具说明、能力信息和随包指南同步当前操作。
 
 ## 软件快速上手
 
@@ -110,7 +112,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.5.10 正常应显示 **29 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.5.11 正常应显示 **33 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -129,7 +131,7 @@ open_studio({})
 
 上述为调用顺序示意，`{}` 表示该工具不需要输入参数，不是需要发送到串口的命令。
 
-1. `open_studio` 打开或连接软件，**不会打开串口**。没有串口连接时，请用户在软件中配置并打开；没有通过 MCP 打开串口、修改权限或替用户点击一键配置的工具。
+1. `open_studio` 打开或连接软件，**不会打开串口**。需要连接时，先读取并核对完整配置，再用 `connect_device` 打开已保存串口。需要改配置或权限时按下一节提交人工审阅；一键读取并配置当前页仍由软件设置页操作。
 2. 从 `get_studio_status` 核对 `connected`、`acquiring`、`replaying`、`jobs`，区分实时采集和历史回放。不要在已有任务仍运行时重复提交同一操作。
 3. 从 `get_device_definition` 读取实际参数 ID、`task.algorithm`、`task.pid_parameters`、`task.parameter_reads`、`task.roles`、协议字段、读取状态和两套 AI 限制。P / I / D / 目标值是角色，**不保证真实 ID 就叫 Kp / Ki / Kd / setpoint**；也不能把参数地址当成参数 ID。
 4. 从 `get_studio_capabilities` 核对 `app_version`、`companion_version`、`versions_match`、产品标识和能力。版本不匹配时先同步更新两个程序并重新加载 MCP。
@@ -137,6 +139,16 @@ open_studio({})
 `get_studio_capabilities` 还会返回 `parameter_setup_scope="current_page"`、`manual_parameter_modes=["slider","input"]` 和当前读取按钮名称，便于 AI 对照界面指导操作。
 
 `task.roles` 中的目标值、实际值、控制输出若未关联，或协议缩放 / 单位明显不符，请先让用户核对配置。设备上下限、AI 允许范围、步长、单次变化限制及目标安全范围以当前返回结果为准，不照搬示例。
+
+### 通过 MCP 配置和连接设备
+
+1. 调用 `get_device_configuration`，取 `result.configuration` 的完整配置副本及 `result.configuration_revision`。它包含串口、全部通道与参数、控制关联、设备能力、安全限制，以及诊断和连续调参两套 AI 权限，不返回密钥。
+2. 依据实际固件和用户请求修改副本，保留其余字段。将完整副本和读取时的版本传给 `validate_device_configuration(configuration, expected_revision)`，先检查全部变更。通道位置、参数地址、量程和运行中改参能力须有真实依据。
+3. 断开设备、结束采集 / 回放 / 后台任务并关闭其他设置窗口后，调用 `configure_device(configuration, expected_revision, reason)`。软件弹出原值与拟保存值对照，返回 `needs_confirmation` 和操作 `id`。**请用户在软件点击“确认保存配置”，AI 不替用户确认。**
+4. 调用 `get_operation(request_id=id)` 查询原操作；只有 `state=completed` 且 `result.saved=true` 表示保存成功。取消或失败应报告实际原因。若无变更，返回 `unchanged=true, saved=false`；配置版本过期须重新读取后合并，不重复提交旧草稿。
+5. 保存后重新调用 `get_device_configuration`，用新的版本与当前设备 ID 调用 `connect_device(device_id, expected_revision)`。此工具只打开已保存串口；`started=true` 表示连接开始，用 `get_studio_status` 确认连接与采集结果，再用 `read_parameters` 读实际参数。
+
+配置保存不写板端参数、不启动电机、不授权拖动或连续调参。配置参考值不能当作读回，单次参数下发及连续会话仍按下文确认。`online_tuning.runtime_writes` 必须由实际固件能力支持，不能为了绕过报错而设为 true。新接收格式只允许 raw / lxy / yzx；原始命令模板、插件及凭据不经配置工具修改。审阅期间发生配置 / 设备切换或停止操作，旧提案失效。
 
 ### 场景一：查看波形、只做诊断
 
@@ -171,7 +183,7 @@ open_studio({})
 ### 场景三：MCP 连续 AI 调参
 
 1. 先确认用户希望进行连续调参，并确认设备实现方支持运行中改参。只有波形上传或停机改参能力时，不能据此声明支持连续调参，也不能由 AI 擅自修改能力声明来绕过限制。
-2. 调用 `prepare_continuous_tuning({})` 显示状态与操作提示。请用户在红色“AI 权限设置”的“MCP 连续调参权限”页填写目标值安全上下限、允许项、各项范围、观察窗口、轮数和总时长，保存后从主页面点击 MCP 启动按钮并确认本次会话。**prepare 只准备，不启动或授权。**
+2. 调用 `prepare_continuous_tuning({})` 显示状态与操作提示。可通过上述配置工具提交目标值安全上下限、允许项、各项范围、观察窗口、轮数和总时长，经用户审阅保存；也可请用户在红色“AI 权限设置”的“MCP 连续调参权限”页填写。之后仍须用户从主页面点击 MCP 启动按钮并确认本次会话。**prepare 只准备，不启动或授权。**
 3. 调用 `get_continuous_tuning_state({})`。只有 `active=true`、`state="active"` 且 `observation` 非空时，才基于该观察和 `constraints` 决定下一轮参数；否则按 `wait_seconds` 或观察窗口等待再查询。历史选区不能代替本轮实时观察。
 4. 调用 `apply_continuous_tuning_step`，传入当前连续会话的 `session_id`、本轮唯一 `step_id`、最新 `observation.id` 作为 `observation_id`、受限候选 `values` 和具体依据 `reason`。`values` 只接受数值，只能包含本次授权参数。
 5. 等待这一轮完成，只有 `readback_verified=true` 才表示本轮写入经应答及独立 GET 核对。随后必须等**新观察窗口**再决定下一轮，不能连续使用旧观察下发。
@@ -186,7 +198,7 @@ open_studio({})
 | 返回内容 | AI 应如何处理 |
 | --- | --- |
 | `state="queued"` 或 `state="running"` | 操作仍在执行，用回执 `id` 调用 `get_operation`；不要重新提交写入 |
-| `state="needs_confirmation"` | 仅暂存建议，等待用户在软件确认，不能当成已写入 |
+| `state="needs_confirmation"` | 配置或参数候选等待用户在软件确认，不能当成已保存或已写入 |
 | `state="completed"` | 该请求结束；仍需检查 `result`，它不保证硬件写入已成功 |
 | `state="error"` 或工具报错 | 按错误说明核对配置 / 连接，报告实际结果，不假装完成 |
 | `result.readback_verified=true` | 连续步骤全部写入已通过读回核对 |
@@ -194,15 +206,19 @@ open_studio({})
 
 连续调参的 `session_id` 要取自 `get_continuous_tuning_state`，不是状态页里的实验 ID。`observation_id` 取当前 `observation.id`。每轮 `step_id` 必须唯一；同一 ID 只能对应完全相同的请求。结果不确定时查询原操作，不更换 ID 重发。
 
-## MCP 工具速查：29 个
+## MCP 工具速查：33 个
 
-`—` 表示无输入参数。下表是 V1.5.10 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表是 V1.5.11 的工具索引；调用时以客户端提供的实际工具 schema 为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
 | `open_studio` | — | 打开 / 连接软件，不打开串口 |
 | `get_studio_status` | — | 连接、采集、回放、任务、当前参数及后台操作状态 |
 | `get_device_definition` | — | 参数 ID、角色、协议、范围、读取选择及 AI 限制 |
+| `get_device_configuration` | — | 完整设备配置、版本摘要和当前能否编辑，不含密钥 |
+| `validate_device_configuration` | `configuration`、`expected_revision` | 校验完整配置并列出全部变更，不保存 |
+| `configure_device` | `configuration`、`expected_revision`、`reason` | 显示逐项变更，须用户在软件确认后保存 |
+| `connect_device` | `device_id`、`expected_revision` | 打开当前设备已保存串口，成功后正常采集，不授予写入 |
 | `get_studio_capabilities` | — | 软件 / MCP 版本、工具数量和支持能力 |
 | `list_devices` | — | 列出已保存设备 |
 | `select_device` | `device_id` | 断开且空闲时切换已有设备 |
@@ -277,7 +293,7 @@ open_studio({})
 | 连续会话不能启动 | 核对该用途权限、目标安全范围、运行中写入能力、遥测、保护阈值和软件返回原因 |
 | 请求超时、返回 running | 用原回执 id 查询 get_operation，不重复发送参数修改 |
 
-更详细说明随 MCP 压缩包提供：`docs/CODEX_CONTROL.md`、`docs/AI_PARAMETER_LIMITS.md`、`docs/MCP_CONTINUOUS_TUNING.md`。
+更详细说明随压缩包提供：`docs/CODEX_CONTROL.md`、`docs/MCP_DEVICE_CONFIGURATION.md`、`docs/AI_PARAMETER_LIMITS.md`、`docs/MCP_CONTINUOUS_TUNING.md`。
 
 ## 使用许可
 
