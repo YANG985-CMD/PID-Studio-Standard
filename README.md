@@ -30,15 +30,22 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.5.14**，Windows x64。
+当前版本：**V1.6.2**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.14/PIDStudio_Standard_App_V1.5.14_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.14/PIDStudio_Standard_MCP_V1.5.14_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.14/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.2/PIDStudio_Standard_App_V1.6.2_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.2/PIDStudio_Standard_MCP_V1.6.2_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.2/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
+
+## V1.6.2 更新
+
+- 新增 PID 线性前馈 `u_ff = Kff × SP + Bff`，支持离线多工况设计、软件内 API 联合诊断及 MCP 有界连续调参。前馈由设备固件在控制周期内计算，软件读取和修改其系数。
+- 前馈窗口提供可编辑的新手默认参数及“补齐默认参数”：Kff/Bff 参考值从 0 开始，建议地址优先为 20/21，避开本地已用地址；单位、范围、刻度与单次上限按配置估算。已有设置保留，建议地址必须与固件实际定义一致。
+- 原“控制与安全”改为“控制与分析”。实际值绝对上限、输出绝对上限和遥测超时统一放在“AI 权限设置 → MCP 连续调参权限 → 连续调参保护”，旧数值保持。只读波形诊断不发送这些运行阈值；连续下发的超限、超时和读回检查保留。
+- 软件与 MCP 均为 **V1.6.2**，共 **56 个工具 / 5 个资源**。新增 `get_linear_feedforward_state`、`design_linear_feedforward`；完整回归 **483 项通过**，冻结程序与实际 stdio MCP 连接验证通过，未进行实机调参验收。
 
 ## V1.5.14 更新
 
@@ -66,7 +73,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 1. 解压软件包，打开 `PIDStudioStandard/PIDStudioStandard.exe`。
 2. 在“串口设置”“通道设置”和“通信协议”中配置端口、波特率、通道接收位置与设备协议。通道标识、换算系数和单位须与实际数据一致。
-3. 在 AI 诊断页“测试连接”右侧的“控制与安全”里核对当前任务的目标值、实际值、控制输出通道对应关系及保护阈值。例如 SP / PV / OUT 只是常用标识，实际以自己的配置为准。
+3. 在 AI 诊断页“测试连接”右侧的“控制与分析”里核对当前任务的目标值、实际值、控制输出通道对应关系。例如 SP / PV / OUT 只是常用标识，实际以自己的配置为准。连续调参的实际值上限、输出上限和遥测超时在“AI 权限设置 → MCP 连续调参权限 → 连续调参保护”中设置；只做波形诊断无需据此填写量程。
 4. 点击“打开串口”，连接成功后软件自动采集；关闭串口时停止采集并保存实验。
 5. 打开“PID 参数设置”，核对板端地址、数值类型、设备范围与步长。默认地址 P=1、I=2、D=3、目标值=4 仅在设备按同一约定实现时适用，不能当成任意板子的真实地址。
 6. 三个设置页底部都有“一键读取当前参数值并配置上方参数”。参数页点击后选择 P / PI / PID，再读取并配置本页；两个 AI 权限页按已保存模式读取，仅配置本用途的范围与单次上限。读取不到的项自行设置，已有人工限制保留；AI 权限勾选和目标值安全上下限仍需填写、保存。
@@ -122,7 +129,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.5.14 正常应显示 **54 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.6.2 正常应显示 **56 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -206,13 +213,40 @@ AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近
 ### 场景三：MCP 连续 AI 调参
 
 1. 先确认用户希望进行连续调参，并确认设备实现方支持运行中改参。只有波形上传或停机改参能力时，不能据此声明支持连续调参，也不能由 AI 擅自修改能力声明来绕过限制。
-2. 调用 `prepare_continuous_tuning({})` 显示状态与操作提示。可通过上述配置工具提交目标值安全上下限、允许项、各项范围、观察窗口、轮数和总时长，经用户审阅保存；也可请用户在红色“AI 权限设置”的“MCP 连续调参权限”页填写。之后仍须用户从主页面点击 MCP 启动按钮并确认本次会话。**prepare 只准备，不启动或授权。**
+2. 调用 `prepare_continuous_tuning({})` 显示状态与操作提示。可通过上述配置工具提交目标值安全上下限、允许项、各项范围、观察窗口、轮数和总时长，经用户审阅保存；也可请用户在红色“AI 权限设置”的“MCP 连续调参权限”页填写，并核对该页“连续调参保护”中的实际值上限、输出上限和遥测超时。之后仍须用户从主页面点击 MCP 启动按钮并确认本次会话。**prepare 只准备，不启动或授权。**
 3. 调用 `get_continuous_tuning_state({})`。只有 `active=true`、`state="active"` 且 `observation` 非空时，才基于该观察和 `constraints` 决定下一轮参数；否则按 `wait_seconds` 或观察窗口等待再查询。历史选区不能代替本轮实时观察。
 4. 调用 `apply_continuous_tuning_step`，传入当前连续会话的 `session_id`、本轮唯一 `step_id`、最新 `observation.id` 作为 `observation_id`、受限候选 `values` 和具体依据 `reason`。`values` 只接受数值，只能包含本次授权参数。
 5. 等待这一轮完成，只有 `readback_verified=true` 才表示本轮写入经应答及独立 GET 核对。随后必须等**新观察窗口**再决定下一轮，不能连续使用旧观察下发。
 6. 达到目标、证据不足或需要结束时，调用 `stop_continuous_tuning`。失败或部分写入后先核对当前状态，不自动回滚或重复发送未知结果的请求。新一轮会话须由用户重新确认。
 
 连续会话确认后，合法步骤不再逐轮弹确认；仍受设备边界、两套用途权限、本次安全范围、时间 / 轮数上限、遥测质量、写入应答和读回检查。软件的“停止写入”只停止后续命令，**不能代替设备的物理急停**。
+
+### 场景四：设计和调整 PID 线性前馈
+
+当前模型为 `最终输出 = PID(SP − PV) + Kff × SP + Bff`，适用于负载一致时的稳态线性关系。先让基础 PID 闭环稳定，再用不同目标的工况设计前馈，最后复测整体响应。Kff 单位为 OUT/SP，Bff 与 OUT 同单位；它不替代加速度前馈或正反转摩擦模型。
+
+1. 固件必须已实现真实的 Kff/Bff 参数读写，并在控制周期中与 PID 求和、统一限幅和处理积分饱和。没有对应接口时可离线研究系数，不能把软件保存配置描述成前馈已生效。MCP 不逐点发送瞬时控制输出。
+2. 打开 AI 页的金色“PID 线性前馈设计”。新手草稿自动填入名称、建议地址、关联单位及估算范围；“补齐默认参数”只填空白。新建参考值 0 不等于设备读回；20/21 只表示本地未冲突的建议，不能当成任意固件的实际地址。
+3. 核对不同的 SP/PV/OUT 关联、SP/PV 相同单位，确认 OUT 为包含已启用前馈的最终控制输出。修改映射前断开设备，保存本地配置；API/MCP 允许项独立设置，不复用 P/I/D。已有配置、另一用途权限和本次会话授权分别保留。
+4. 采集或导入至少三个不同目标的完整稳定平台，保持负载一致，框选分析区间。点击“离线设计选定波形”，或先 `get_linear_feedforward_state` 再调用 `design_linear_feedforward`。本地程序筛除过渡、跟踪偏差、明显波动和接近已配置输出上限的平台，按整组目标做留出检验；返回候选、误差及适用范围，不调用 API 或写设备。
+5. 用户可以编辑下方 Kff/Bff，并“审阅前馈待写入值”进入输入调参表，确认后才下发。软件内“AI 联合诊断 PID 与前馈”使用已保存 API 配置分析选区；主诊断按钮同样带入已启用前馈。建议仍受本用途权限、范围、刻度和单次变化上限约束。
+6. 通过 MCP 调整时，使用真实映射 ID 和当前约束；单次 `write_parameters` 等待软件确认。连续调整使用场景三的会话和新观察，写入后核对独立读回。为评估前馈本身，可在用户同意下只开放 Kff/Bff，保持 PID 固定。
+
+MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`，示例为：
+
+```json
+{
+  "enabled": true,
+  "gain_parameter": "Kff",
+  "bias_parameter": "Bff",
+  "output_kind": "total_control_effort",
+  "min_plateau_seconds": 0.5,
+  "tracking_tolerance": 0.03,
+  "max_relative_error": 0.1
+}
+```
+
+此片段不能单独代替完整设备配置。对应参数还须有真实地址、单位、上下限、刻度及 `ai_workflows[task_id]` 中本用途的允许项。按前述配置读取、校验和用户审阅流程保存，不因新增映射自动授予写入会话。前馈报告中的候选值不能替代设备独立读回。
 
 ### 返回状态和 ID：不要混用
 
@@ -229,9 +263,9 @@ AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近
 
 连续调参的 `session_id` 要取自 `get_continuous_tuning_state`，不是状态页里的实验 ID。`observation_id` 取当前 `observation.id`。每轮 `step_id` 必须唯一；同一 ID 只能对应完全相同的请求。结果不确定时查询原操作，不更换 ID 重发。
 
-## MCP 工具速查：54 个
+## MCP 工具速查：56 个
 
-`—` 表示无输入参数。下表是 V1.5.14 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表是 V1.6.2 的工具索引；调用时以客户端提供的实际工具 schema 为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
@@ -255,6 +289,8 @@ AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近
 | `get_waveform` | 可选 `max_points`，默认 200，范围 10–2000 | 获取均匀抽样的波形预览及质量信息 |
 | `set_analysis_interval` | 可选 `start_seconds`、`end_seconds` | 设置相对时间选区；两项都省略则清除 |
 | `analyze_waveform` | — | 计算当前选区 / 显示缓冲区的本地指标 |
+| `get_linear_feedforward_state` | — | 读取已保存前馈映射、参数和两套用途约束，不读取设备 |
+| `design_linear_feedforward` | — | 对当前选区做本地多稳态平台前馈设计，不保存、调用 API 或写设备 |
 | `start_capture` | — | 已连接时开始记录；已在记录时返回当前实验 |
 | `stop_capture` | — | 停止并保存记录，串口保持连接 |
 | `disconnect_device` | — | 停止采集并断开设备 |
@@ -337,7 +373,7 @@ AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近
 | 连续会话不能启动 | 核对该用途权限、目标安全范围、运行中写入能力、遥测、保护阈值和软件返回原因 |
 | 请求超时、返回 running | 用原回执 id 查询 get_operation，不重复发送参数修改 |
 
-更详细说明随压缩包提供：`docs/CODEX_CONTROL.md`、`docs/MCP_DEVICE_CONFIGURATION.md`、`docs/MCP_WORKBENCH_TOOLS.md`、`docs/AI_PARAMETER_LIMITS.md`、`docs/MCP_CONTINUOUS_TUNING.md`。
+更详细说明随压缩包提供：`docs/CODEX_CONTROL.md`、`docs/MCP_DEVICE_CONFIGURATION.md`、`docs/MCP_WORKBENCH_TOOLS.md`、`docs/AI_PARAMETER_LIMITS.md`、`docs/MCP_CONTINUOUS_TUNING.md`、`docs/PID_LINEAR_FEEDFORWARD.md`。
 
 ## 使用许可
 
