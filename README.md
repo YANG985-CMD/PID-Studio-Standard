@@ -30,15 +30,22 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.5.12**，Windows x64。
+当前版本：**V1.5.14**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.12/PIDStudio_Standard_App_V1.5.12_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.12/PIDStudio_Standard_MCP_V1.5.12_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.12/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.14/PIDStudio_Standard_App_V1.5.14_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.14/PIDStudio_Standard_MCP_V1.5.14_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.5.14/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
+
+## V1.5.14 更新
+
+- AI 诊断页依次显示“选择分析区间 / 诊断选定波形 / 诊断目标”，目标可下拉选择或直接输入；“启动 MCP 连续 AI 调参”独占下一行。诊断目标由 GUI 与 MCP 共用，修改目标只保存该项，不启用权限、不调用 AI 或下发参数。
+- 下方“同步最新 PID 值”显示最近设备读回的 P / I / D；AI、手动或 MCP 写入后经读回确认会自动同步。目标值不在此摘要显示，原有读取、调节与保护功能保留；待写入建议不当作已生效值。
+- 参数调试按 P / PI / PID 模式默认勾选已配置可用的参数及目标值，模式停用或未配置项保持不可用；刷新保留人工取消的选择，不授予下发权限。
+- 软件与配套 MCP 均为 **V1.5.14**，保持 **54 个工具 / 5 个资源**，能力信息及随包指南同步更新。完整离线回归 **465 项通过**；未进行实机调参验收。
 
 ## V1.5.12 更新
 
@@ -64,7 +71,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 5. 打开“PID 参数设置”，核对板端地址、数值类型、设备范围与步长。默认地址 P=1、I=2、D=3、目标值=4 仅在设备按同一约定实现时适用，不能当成任意板子的真实地址。
 6. 三个设置页底部都有“一键读取当前参数值并配置上方参数”。参数页点击后选择 P / PI / PID，再读取并配置本页；两个 AI 权限页按已保存模式读取，仅配置本用途的范围与单次上限。读取不到的项自行设置，已有人工限制保留；AI 权限勾选和目标值安全上下限仍需填写、保存。
 7. 在“滑动调参”里修改步长或用滑块、箭头调节；步长与参数设置同步，实时下发须先确认本次会话。在“输入调参”里编辑待写入值，点击“写入选中参数”并确认。两页共用“读取设备当前参数值”“备份PID参数”“恢复备份PID参数”“导出PID参数”；表格中的数字不代表已写入。
-8. 使用软件内 AI 波形诊断时，先配置自己的 API，在“波形诊断权限”页保存目标、建议权限和参数限制，再点击诊断按钮左侧的“选择分析区间”，框选包含阶跃和响应的波形并点击“诊断选定波形”。API Key 存入 Windows 凭据存储。
+8. 使用软件内 AI 波形诊断时，先配置自己的 API，在“波形诊断权限”页保存建议权限和参数限制，在主 AI 页面“诊断选定波形”右侧选择或输入诊断目标，再点击诊断按钮左侧的“选择分析区间”，框选包含阶跃和响应的波形并点击“诊断选定波形”。API Key 存入 Windows 凭据存储。
 
 当前参数值指**设备此刻的 P、I、D（按所选控制类型读取）及目标值**。参数页的一键读取使用本次成功读值计算默认步长：当前参数值绝对值的 1%，小数默认按 0.000001 或已有更细刻度取整，零值退回该步长；之后仍可手动修改。调节范围以本轮读取的当前参数值为基准，按基准 ± 步长 × 100 计算，并与设备上下限取交集。诊断与 MCP 的单次变化上限默认各为步长 × 10，可分别修改。
 
@@ -115,7 +122,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.5.12 正常应显示 **54 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.5.14 正常应显示 **54 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -138,6 +145,8 @@ open_studio({})
 2. 从 `get_studio_status` 核对 `connected`、`acquiring`、`replaying`、`jobs`，区分实时采集和历史回放。不要在已有任务仍运行时重复提交同一操作。
 3. 从 `get_device_definition` 读取实际参数 ID、`task.algorithm`、`task.pid_parameters`、`task.parameter_reads`、`task.roles`、协议字段、读取状态和两套 AI 限制。P / I / D / 目标值是角色，**不保证真实 ID 就叫 Kp / Ki / Kd / setpoint**；也不能把参数地址当成参数 ID。
 4. 从 `get_studio_capabilities` 核对 `app_version`、`companion_version`、`versions_match`、产品标识和能力。版本不匹配时先同步更新两个程序并重新加载 MCP。
+
+AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近设备读回的 P / I / D；AI 下发并读回确认后自动更新。它不会额外后台轮询，也不把候选值视为当前值。“诊断目标”位于诊断按钮右侧，GUI 与 MCP 使用同一已保存目标。
 
 `get_studio_capabilities` 还会返回 `parameter_setup_scope="current_page"`、`manual_parameter_modes=["slider","input"]` 和当前读取按钮名称，便于 AI 对照界面指导操作。
 
@@ -222,7 +231,7 @@ open_studio({})
 
 ## MCP 工具速查：54 个
 
-`—` 表示无输入参数。下表是 V1.5.12 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表是 V1.5.14 的工具索引；调用时以客户端提供的实际工具 schema 为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
