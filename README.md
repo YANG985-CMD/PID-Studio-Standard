@@ -22,13 +22,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.6.5**，Windows x64。
+当前版本：**V1.6.6**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.5/PIDStudio_Standard_App_V1.6.5_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.5/PIDStudio_Standard_MCP_V1.6.5_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.5/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.6/PIDStudio_Standard_App_V1.6.6_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.6/PIDStudio_Standard_MCP_V1.6.6_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.6/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -41,6 +41,12 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.6.6 更新
+
+- 修复点击“诊断选定波形”或“AI 联合诊断 PID 与前馈”后，AI 多返回说明字段导致整份诊断被拒收的问题。兼容 `additional_data_needed_note`、`candidate_parameters_notes` 及其单复数文本形式，统一保留在报告的“补充说明”中。
+- AI 返回格式统一提供 `notes` 文本列表，说明只用于展示及记录。参数数值、权限、范围、步长和人工确认继续独立校验；其他不合法回复显示中文格式提示，不会自动重发 API 请求。
+- 软件与 MCP 同步为 **V1.6.6**，保持 **56 个工具 / 5 个资源**，`get_ai_diagnosis` 同步返回 `diagnosis.notes`。**537 项完整离线测试通过**，含截图字段及两个诊断入口的 16 个新增回归用例；冻结程序启动及实际 MCP 连接核对通过，未进行实机调参验收。
 
 ## V1.6.5 更新
 
@@ -139,7 +145,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.6.5 正常应显示 **56 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.6.6 正常应显示 **56 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -166,6 +172,8 @@ open_studio({})
 AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近设备读回的 P / I / D；AI 下发并读回确认后自动更新。卡片显示各项最近读回时间；悬停可查看完整时间及来源。状态与设备定义的 `parameter_readbacks` 提供 `current_connection`、时间和来源，只有本次连接成功读回才标记为当前确认，不能仅凭旧参数的 `status` 判断。它不会额外后台轮询，也不把候选值视为当前值。“诊断目标”位于诊断按钮右侧，GUI 与 MCP 使用同一已保存目标。
 
 `get_connection_diagnostics` 的 `summary` 汇总通信状态；`get_ai_diagnosis` 的 `request_evidence` 保留请求时参数、模型、来源实验及选区。软件诊断显示“查看原波形”只读预览；历史来源或请求时参数不能当作采集时的实际生效值，也不能代替当前下发校验。
+
+V1.6.6 的 `get_ai_diagnosis` 返回 `diagnosis.notes`，保留 AI 的附加说明；只作为报告文字，不能转换为参数或据此扩大权限。截图中已知的 note/notes 文本别名会兼容合并，其他未知控制字段仍拒绝。
 
 `get_studio_capabilities` 还会返回 `parameter_setup_scope="current_page"`、`manual_parameter_modes=["slider","input"]` 和当前读取按钮名称，便于 AI 对照界面指导操作。
 
