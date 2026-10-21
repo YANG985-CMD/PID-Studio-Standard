@@ -22,13 +22,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.6.7**，Windows x64。
+当前版本：**V1.6.8**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.7/PIDStudio_Standard_App_V1.6.7_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.7/PIDStudio_Standard_MCP_V1.6.7_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.7/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.8/PIDStudio_Standard_App_V1.6.8_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.8/PIDStudio_Standard_MCP_V1.6.8_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.8/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -41,6 +41,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.6.8 更新
+
+- 修复无设备查看历史波形时，保存前馈参数定义与权限仍提示“请先断开设备”的问题。
+- 历史回放只表示当前查看的是历史数据；没有串口、写入对象、采集任务或正在关闭的连接句柄时，可以保存本地前馈配置。
+- 串口打开失败时清理残留的参数写入对象；正在关闭串口或尚在采集时，分别显示对应原因。
+- 软件与 MCP 同步为 **V1.6.8**，保持 **56 个工具 / 5 个资源**；**547 项完整离线测试通过**，包括真实历史回放保存、历史数据保持和模拟连接失败的回归。未连接硬件或调用真实 AI。
 
 ## V1.6.7 更新
 
