@@ -1,13 +1,5 @@
 # PID Studio｜软件与 MCP 使用说明
 
-**为爱发电，有条件的可以支持一下回回血，感谢**
-
-| 支付宝 |
-| :---: |
-| <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
-
-小红书、B站、抖音搜索：**电机的主人**。
-
 本仓库提供软件、配套 MCP 及下载说明，不公开应用实现源码。软件和 MCP 可免费使用，无需开发密码或企业授权。
 
 **给 AI 阅读：[完整 Markdown 原文](https://raw.githubusercontent.com/YANG985-CMD/PID-Studio-Standard/main/README.md)。** 本文包含安装配置、软件操作、全部 MCP 工具和 AI 调参流程；可将此链接直接交给支持联网阅读的 AI。实际控制本机软件，还需要在该 AI 客户端连接下面介绍的 MCP。
@@ -30,15 +22,33 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.6.2**，Windows x64。
+当前版本：**V1.6.5**，Windows x64。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio ](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.2/PIDStudio_Standard_App_V1.6.2_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.2/PIDStudio_Standard_MCP_V1.6.2_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.2/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.5/PIDStudio_Standard_App_V1.6.5_Windows.zip) | PID 参数调试、实时波形和 AI 波形诊断 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.5/PIDStudio_Standard_MCP_V1.6.5_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.6.5/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
+
+## 支持作者
+
+**为爱发电，有条件的可以支持一下回回血，感谢**
+
+| 支付宝 |
+| :---: |
+| <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
+
+小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.6.5 更新
+
+- 保留紧凑、加粗、可复制的 P/I/D 卡片，增加每项最近成功读回时间和本次连接标记。重连前记录与旧配置的确认状态不能当成本次已同步；待同步、保留记录和未启用项分别显示。
+- AI 诊断固定请求时的参数、模型、来源实验与选区；报告优先显示结论，可点击“查看原波形”核对只读预览。历史波形诊断归入来源实验，参数快照不代表波形采集时的实际生效值；应用建议仍按当前权限与范围检查。
+- 顶部集中显示通信状态，区分串口未连接、已打开但无有效波形、有效接收与数据延迟。常用 1080×720 窗口、约 348 px 右侧面板的普通 PID 值可同排显示，无整页滚动；极长值或更小窗口保留必要滚动。
+- 包含 V1.6.3 的前馈优化：按每个目标的跟踪容差筛选连续稳定平台，检查漂移和窗口一致性，目标等权拟合并逐目标留出验证；提供拟合图、剔除原因及经人工核对采集条件的选区效果对比。
+- 软件与 MCP 均为 **V1.6.5**，保持 **56 个工具 / 5 个资源**，同步提供读回证据、通信摘要和诊断来源。**521 项完整离线测试通过**，最终报告调整后相关 46 项再次通过；冻结程序启动及实际 MCP 连接核对通过，未进行实机调参验收。
 
 ## V1.6.2 更新
 
@@ -129,7 +139,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.6.2 正常应显示 **56 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.6.5 正常应显示 **56 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -153,7 +163,9 @@ open_studio({})
 3. 从 `get_device_definition` 读取实际参数 ID、`task.algorithm`、`task.pid_parameters`、`task.parameter_reads`、`task.roles`、协议字段、读取状态和两套 AI 限制。P / I / D / 目标值是角色，**不保证真实 ID 就叫 Kp / Ki / Kd / setpoint**；也不能把参数地址当成参数 ID。
 4. 从 `get_studio_capabilities` 核对 `app_version`、`companion_version`、`versions_match`、产品标识和能力。版本不匹配时先同步更新两个程序并重新加载 MCP。
 
-AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近设备读回的 P / I / D；AI 下发并读回确认后自动更新。它不会额外后台轮询，也不把候选值视为当前值。“诊断目标”位于诊断按钮右侧，GUI 与 MCP 使用同一已保存目标。
+AI 页“同步最新 PID 值”调用同一读取流程，下方仅展示最近设备读回的 P / I / D；AI 下发并读回确认后自动更新。卡片显示各项最近读回时间；悬停可查看完整时间及来源。状态与设备定义的 `parameter_readbacks` 提供 `current_connection`、时间和来源，只有本次连接成功读回才标记为当前确认，不能仅凭旧参数的 `status` 判断。它不会额外后台轮询，也不把候选值视为当前值。“诊断目标”位于诊断按钮右侧，GUI 与 MCP 使用同一已保存目标。
+
+`get_connection_diagnostics` 的 `summary` 汇总通信状态；`get_ai_diagnosis` 的 `request_evidence` 保留请求时参数、模型、来源实验及选区。软件诊断显示“查看原波形”只读预览；历史来源或请求时参数不能当作采集时的实际生效值，也不能代替当前下发校验。
 
 `get_studio_capabilities` 还会返回 `parameter_setup_scope="current_page"`、`manual_parameter_modes=["slider","input"]` 和当前读取按钮名称，便于 AI 对照界面指导操作。
 
