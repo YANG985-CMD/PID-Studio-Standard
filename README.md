@@ -23,13 +23,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.8.5**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本：**V1.8.6**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.5/PIDStudio_Standard_App_V1.8.5_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.5/PIDStudio_Standard_MCP_V1.8.5_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.5/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.6/PIDStudio_Standard_App_V1.8.6_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.6/PIDStudio_Standard_MCP_V1.8.6_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.6/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -42,6 +42,15 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.8.6 更新
+
+- 连续调参默认“自动调整幅度”：按设备实际读回量级起步，同条件改参复测持续改善时扩大，表现变差或输出余量不足时缩小，改善较小时细调。API 与 MCP 共用同一套规则，手动滑条刻度独立。
+- 手动单次上限收进“AI 权限设置 → 连续调参权限 → 幅度上限（高级）”。已有人工上限继续有效，增益项清空后恢复自动幅度；也可选择“固定幅度（高级）”。目标值的阶跃上限独立保留。
+- 只有参数修改后的完整复测、并通过末尾读回核对，才累计幅度更新依据；查询状态、保持参数、过期建议或失败读回不会扩幅。跟随实际工况保留保守幅度，避免直接比较不同工况。
+- “方法与论文依据”按“借鉴哪些部分、软件怎样运用”展示，补充局部搜索幅度管理的论文来源；状态显示幅度更新原因，接近范围边界时提示具体设置入口。
+- 界面默认使用“设备使能”“设备启停”，观察预设按响应快慢说明，适用于不同类型设备；已有自定义通道名称保留。
+- GUI / MCP 均为 **V1.8.6**，**57 个工具 / 5 个资源**；**756 项完整离线回归通过**，独立程序、版本、打包内容与安装文件核对通过。效果以设备实际工况复测为依据。
 
 ## V1.8.5 更新
 
@@ -63,18 +72,30 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## 连续调参的方式与论文依据
 
+### 自动调整幅度：借鉴部分与软件做法
+
+借鉴 Eriksson 等 NeurIPS 2019 论文 [Scalable Global Optimization via Local Bayesian Optimization](https://proceedings.neurips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf)第 2 节中，根据连续试验结果扩大或收缩局部搜索区域的思路。软件由 AI 提出参数候选，再根据参数修改后的同条件实测评分管理幅度。
+
+| 实际响应 | 软件如何调整 |
+| --- | --- |
+| 连续两次改参后的完整复测均明显改善，且输出余量充足 | 逐渐扩大搜索幅度 |
+| 改善较小，适合进一步细调 | 缩小幅度进行精细调整 |
+| 评分、超调或波动明显变差，或输出余量不足 | 缩小幅度，并提示在当前限制内向已验证较好参数回调 |
+
+参数范围、人工上限、写入刻度与运行保护继续执行，范围不会随幅度自动扩大。目标值阶跃幅度独立保留；跟随实际工况不会因不同工况误差直接比较而扩幅。具体工程比例和次数见解压包内 `docs/ADAPTIVE_ADJUSTMENT.md`；状态中的 `adjustment` 解释本轮幅度，`constraints` 给出每次发送时执行的实际限制。
+
 第一次使用建议保留“自动阶跃＋平衡性能”，核对预填的目标 A、B，并选择每段观察时长。软件读取当前参数，完成 A、B、A 整组响应后再请求建议；初始波形尚未稳定也可以调参。目标值只设置一套安全范围，单次变化量和设备保护仍有效；默认不限总时间和轮数，由用户停止。AI 不能修改已确认的测试轨迹或评分规则，主页面仍可查看实时波形。
 
 | 方式 | 怎么做 | 参考论文与采用范围 |
 | --- | --- | --- |
-| 自动阶跃（推荐） | 读取当前参数后完成 A→B→A，完整响应后评价超调、误差、稳定时间与波动，调整后重复 | Hjalmarsson 等，1998，[Iterative feedback tuning: theory and applications](https://doi.org/10.1109/37.710876)：借鉴闭环试验和受限迭代，未复现 IFT 专门梯度试验 |
-| 多目标综合（高级） | 按用户填写的 3～8 个不同目标测试并回到首点，同一组参数兼顾平均和最差表现 | Neumann-Brosig 等，2020，[Data-Efficient Autotuning With Bayesian Optimization: An Industrial Control Study](https://doi.org/10.1109/TCST.2018.2886159)：借鉴试验成本与历史评价；论文案例主要为节气门 ADRC，软件未实现其贝叶斯优化器 |
-| 跟随实际工况（高级） | 软件不改目标，依据用户或板端给定工况的新鲜波形小幅调参 | Hjalmarsson 等，1998，[IFT 论文](https://doi.org/10.1109/37.710876)：借鉴闭环数据迭代改善；固定目标不能单独验证动态性能改善 |
-| 前馈多点整定 | 从前馈入口启动，固定 PID，多点稳定采集、拟合与评价，仅修正 Kff/Bff 后复测 | van der Meulen 等，2008，[Fixed Structure Feedforward Controller Design Exploiting Iterative Trials](https://doi.org/10.1115/1.2957626)：借鉴固定结构和重复试验；论文运动前馈不等同于软件静态 Kff×SP+Bff |
+| 自动阶跃（推荐） | 读取当前参数后完成 A→B→A，完整响应后评价超调、误差、稳定时间与波动，调整后重复 | Hjalmarsson 等，1998，[Iterative feedback tuning: theory and applications](https://doi.org/10.1109/37.710876)：借鉴闭环试验、固定性能准则和受限迭代，用相同测试比较调整前后效果 |
+| 多目标综合（高级） | 按用户填写的 3～8 个不同目标测试并回到首点，同一组参数兼顾平均和最差表现 | Neumann-Brosig 等，2020，[Data-Efficient Autotuning With Bayesian Optimization: An Industrial Control Study](https://doi.org/10.1109/TCST.2018.2886159)：借鉴试验成本、历史评价与数据效率，将多工况实测表现汇总为统一指标 |
+| 跟随实际工况（高级） | 软件不改目标，依据用户或板端给定工况的新鲜波形小幅调参 | Hjalmarsson 等，1998，[IFT 论文](https://doi.org/10.1109/37.710876)：借鉴利用闭环运行数据迭代改善的思路，结合当前工况波形提出受限参数建议 |
+| 前馈多点整定 | 从前馈入口启动，固定 PID，多点稳定采集、拟合与评价，仅修正 Kff/Bff 后复测 | van der Meulen 等，2008，[Fixed Structure Feedforward Controller Design Exploiting Iterative Trials](https://doi.org/10.1115/1.2957626)：借鉴固定结构前馈与重复试验，用于静态 Kff×SP+Bff 的多点拟合、误差评价与复测 |
 
 每种自动模式使用固定工程权重评价跟踪误差、超调、稳定时间、末段波动及输出饱和；全组兼顾平均与最差段，评分越低越好。高级设置中的验收阈值只由实测结果核对。数据不足时等待新的完整观察；完整响应尚未稳定时仍可继续调整，明确显示“未稳定”，不伪造零秒稳定时间。跟随模式不使用自动阶跃验收阈值。
 
-保护设计参考 Berkenkamp 等，ICRA 2016，[Safe Controller Optimization for Quadrotors with Gaussian Processes](https://doi.org/10.1109/ICRA.2016.7487170) 从已知可用参数出发的思路；软件未实现 SafeOpt，也不继承论文假设下的安全保证。软件继续使用权限、设备范围、单次上限、遥测保护、ACK 与独立读回。
+保护设计参考 Berkenkamp 等，ICRA 2016，[Safe Controller Optimization for Quadrotors with Gaussian Processes](https://doi.org/10.1109/ICRA.2016.7487170) 从已知可用参数出发、在运行约束内逐步探索的思路，结合权限、设备范围、调节幅度、新鲜遥测、ACK 与独立读回管理每次调整。
 
 解压后的 `docs/CONTINUOUS_TUNING_METHODS.md` 提供完整操作与评分规则，`docs/CONTINUOUS_TUNING_LITERATURE.md` 提供文献核对记录。停止仅撤销后续软件写入，不自动恢复最佳参数或保证设备物理停机。
 
@@ -83,14 +104,14 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | 预设 | 适用情况 | A、B、A 三段采集约需 |
 | --- | --- | --- |
 | 快速观察 · 2 秒 | 响应快、扰动小的小幅阶跃 | 6 秒 |
-| 通用观察 · 4 秒（推荐） | 电机速度环初次试调 | 12 秒 |
+| 通用观察 · 4 秒（推荐） | 响应在数秒内基本展开，兼顾响应过程、末段波动与每轮等待 | 12 秒 |
 | 充分观察 · 8 秒 | 波动明显、负载较重，观察振荡衰减或缓慢回落 | 24 秒 |
 | 慢响应 · 15 秒 | 惯量较大、恢复较慢、低频波动明显 | 45 秒 |
 | 自定义 · 2～60 秒 | 按实际响应选择其他时长 | 每段时长 × 3 |
 
 以上另加通信、参数读回和 AI 分析耗时。多目标与前馈按目标列表并回到首点计算；跟随模式每次收集一个窗口的新波形。
 
-这些是工程起点，不是论文统一规定的最优时间。Lizarraga 等 2026 年的[直流电机位置控制实验](https://doi.org/10.3390/eng7080397)第 5.1 节采用每个候选总长 3 秒、0.5 秒时施加阶跃；位置环的设置不能直接当作当前速度环的最优值。软件内“方法与论文依据”写明参考范围。
+这些是便于上手的工程预设，按实际设备响应选择。Lizarraga 等 2026 年的[直流电机位置控制实验](https://doi.org/10.3390/eng7080397)第 5.1 节采用每个候选总长 3 秒、0.5 秒时施加阶跃；借鉴其中保持候选试验时序一致的做法，结合当前设备响应选择窗口。软件内“方法与论文依据”写明采用部分。
 
 ## V1.6.8 更新
 
@@ -159,7 +180,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 7. 在“滑动调参”里修改步长或用滑块、箭头调节；步长与参数设置同步，实时下发须先确认本次会话。在“输入调参”里编辑待写入值，点击“写入选中参数”并确认。两页共用“读取设备当前参数值”“备份PID参数”“恢复备份PID参数”“导出PID参数”；表格中的数字不代表已写入。
 8. 使用软件内 AI 波形诊断时，先配置自己的 API，在“波形诊断权限”页保存建议权限和参数限制，在主 AI 页面“诊断选定波形”右侧选择或输入诊断目标，再点击诊断按钮左侧的“选择分析区间”，框选包含阶跃和响应的波形并点击“诊断选定波形”。API Key 存入 Windows 凭据存储。
 
-当前参数值指**设备此刻的 P、I、D（按所选控制类型读取）及目标值**。参数页的一键读取使用本次成功读值计算默认步长：当前参数值绝对值的 1%，小数默认按 0.000001 或已有更细刻度取整，零值退回该步长；之后仍可手动修改。调节范围以本轮读取的当前参数值为基准，按基准 ± 步长 × 100 计算，并与设备上下限取交集。诊断与 MCP 的单次变化上限默认各为步长 × 10，可分别修改。
+当前参数值指**设备此刻的 P、I、D（按所选控制类型读取）及目标值**。参数页的一键读取使用本次成功读值计算默认步长：当前参数值绝对值的 1%，小数默认按 0.000001 或已有更细刻度取整，零值退回该步长；之后仍可手动修改。调节范围以本轮读取的当前参数值为基准，按基准 ± 步长 × 100 计算，并与设备上下限取交集。诊断建议的单次上限默认取步长 × 10；连续调参默认按实测自动调整幅度。两套用途分别保存，已有人工上限保留在对应设置中。
 
 读取失败时保留旧数值和旧步长，不能把表格中的旧数字当成本次已读成功；**读回的 0 也可能是有效数值**。是否成功要看读取状态。读取数值不按写入范围或步长裁剪，实际写入仍检查范围、刻度、权限和单次变化上限。
 
@@ -208,7 +229,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.8.5 正常应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.8.6 正常应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -350,7 +371,7 @@ MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`
 
 ## MCP 工具速查：57 个
 
-`—` 表示无输入参数。下表是 V1.8.5 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表是 V1.8.6 的工具索引；调用时以客户端提供的实际工具 schema 为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
