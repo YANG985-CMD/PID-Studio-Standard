@@ -23,13 +23,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.8.0**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本：**V1.8.5**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.0/PIDStudio_Standard_App_V1.8.0_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.0/PIDStudio_Standard_MCP_V1.8.0_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.0/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.5/PIDStudio_Standard_App_V1.8.5_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.5/PIDStudio_Standard_MCP_V1.8.5_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.5/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -43,6 +43,15 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 小红书、B站、抖音搜索：**电机的主人**。
 
+## V1.8.5 更新
+
+- 连续调参默认不限总时间和轮数，由用户点击停止。稳定容差和连续稳定观察只用于评价，完整响应尚未稳定时仍交给 AI 继续调整。
+- 启动窗口直接选择每段观察时长：2 秒快速、4 秒通用（推荐）、8 秒充分、15 秒慢响应，并保留 2～60 秒自定义。每档显示适用情况和整组采集耗时，成功启动后记住选择与评价设置。
+- 目标值取消重复的 AI 上下限，统一使用同页“目标值安全下限 / 上限”；旧目标 AI 子范围不再额外拦截。P/I/D 范围独立保留，设备边界和目标单次变化上限继续生效。
+- 状态窗口支持自由滚动与可选“跟随最新状态”，刷新不再强制回滚；启动预填已有授权范围内的合法 A/B 目标，仍需用户核对确认。
+- 改善遥测时效、浮点读回、小数目标、固定 PID/前馈核对、历史长窗口、CSV 参数来源、重复备份及历史定位。MCP 新增 `observe_continuous_tuning`，可保持参数并重新收集完整观察；终态保留最后已验证评价。
+- GUI / MCP 均为 **V1.8.5**，**57 个工具 / 5 个资源**；**738 项完整离线回归通过**，冻结 GUI/MCP 与安装文件核对通过。验证使用隔离数据、假设备与模拟 AI，未把离线通过当作真实设备调参效果证明。
+
 ## V1.8.0 更新
 
 - 连续调参可选择 API 或 MCP，参数权限与执行保护相同，模型和用量来源不同。主页面入口用于 PID，前馈窗口底部入口支持 PID 与前馈。
@@ -54,20 +63,34 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## 连续调参的方式与论文依据
 
-第一次使用建议保留“自动阶跃＋平衡性能”，填写两个确认可用的目标 A、B。先使用可稳定运行的初始参数，软件完成 A、B、A 整组响应后再请求建议。目标范围、相邻变化量、观察时长、轮数和总时限沿用已保存权限；AI 不能修改测试轨迹或评分规则。主页面仍可查看实时波形。
+第一次使用建议保留“自动阶跃＋平衡性能”，核对预填的目标 A、B，并选择每段观察时长。软件读取当前参数，完成 A、B、A 整组响应后再请求建议；初始波形尚未稳定也可以调参。目标值只设置一套安全范围，单次变化量和设备保护仍有效；默认不限总时间和轮数，由用户停止。AI 不能修改已确认的测试轨迹或评分规则，主页面仍可查看实时波形。
 
 | 方式 | 怎么做 | 参考论文与采用范围 |
 | --- | --- | --- |
-| 自动阶跃（推荐） | 到 A 稳定后完成 A→B→A，本地评价超调、误差、稳定时间与波动，调整后重复 | Hjalmarsson 等，1998，[Iterative feedback tuning: theory and applications](https://doi.org/10.1109/37.710876)：借鉴闭环试验和受限迭代，未复现 IFT 专门梯度试验 |
+| 自动阶跃（推荐） | 读取当前参数后完成 A→B→A，完整响应后评价超调、误差、稳定时间与波动，调整后重复 | Hjalmarsson 等，1998，[Iterative feedback tuning: theory and applications](https://doi.org/10.1109/37.710876)：借鉴闭环试验和受限迭代，未复现 IFT 专门梯度试验 |
 | 多目标综合（高级） | 按用户填写的 3～8 个不同目标测试并回到首点，同一组参数兼顾平均和最差表现 | Neumann-Brosig 等，2020，[Data-Efficient Autotuning With Bayesian Optimization: An Industrial Control Study](https://doi.org/10.1109/TCST.2018.2886159)：借鉴试验成本与历史评价；论文案例主要为节气门 ADRC，软件未实现其贝叶斯优化器 |
 | 跟随实际工况（高级） | 软件不改目标，依据用户或板端给定工况的新鲜波形小幅调参 | Hjalmarsson 等，1998，[IFT 论文](https://doi.org/10.1109/37.710876)：借鉴闭环数据迭代改善；固定目标不能单独验证动态性能改善 |
 | 前馈多点整定 | 从前馈入口启动，固定 PID，多点稳定采集、拟合与评价，仅修正 Kff/Bff 后复测 | van der Meulen 等，2008，[Fixed Structure Feedforward Controller Design Exploiting Iterative Trials](https://doi.org/10.1115/1.2957626)：借鉴固定结构和重复试验；论文运动前馈不等同于软件静态 Kff×SP+Bff |
 
-每种自动模式使用固定工程权重评价跟踪误差、超调、稳定时间、末段波动及输出饱和；全组兼顾平均与最差段，评分越低越好。高级设置中的验收阈值只由实测结果核对。数据不足或本轮未稳定时停止后续下发，不把“未稳定”记为零秒稳定。跟随模式不使用自动阶跃验收阈值。
+每种自动模式使用固定工程权重评价跟踪误差、超调、稳定时间、末段波动及输出饱和；全组兼顾平均与最差段，评分越低越好。高级设置中的验收阈值只由实测结果核对。数据不足时等待新的完整观察；完整响应尚未稳定时仍可继续调整，明确显示“未稳定”，不伪造零秒稳定时间。跟随模式不使用自动阶跃验收阈值。
 
 保护设计参考 Berkenkamp 等，ICRA 2016，[Safe Controller Optimization for Quadrotors with Gaussian Processes](https://doi.org/10.1109/ICRA.2016.7487170) 从已知可用参数出发的思路；软件未实现 SafeOpt，也不继承论文假设下的安全保证。软件继续使用权限、设备范围、单次上限、遥测保护、ACK 与独立读回。
 
 解压后的 `docs/CONTINUOUS_TUNING_METHODS.md` 提供完整操作与评分规则，`docs/CONTINUOUS_TUNING_LITERATURE.md` 提供文献核对记录。停止仅撤销后续软件写入，不自动恢复最佳参数或保证设备物理停机。
+
+### 每段观察时间怎么选
+
+| 预设 | 适用情况 | A、B、A 三段采集约需 |
+| --- | --- | --- |
+| 快速观察 · 2 秒 | 响应快、扰动小的小幅阶跃 | 6 秒 |
+| 通用观察 · 4 秒（推荐） | 电机速度环初次试调 | 12 秒 |
+| 充分观察 · 8 秒 | 波动明显、负载较重，观察振荡衰减或缓慢回落 | 24 秒 |
+| 慢响应 · 15 秒 | 惯量较大、恢复较慢、低频波动明显 | 45 秒 |
+| 自定义 · 2～60 秒 | 按实际响应选择其他时长 | 每段时长 × 3 |
+
+以上另加通信、参数读回和 AI 分析耗时。多目标与前馈按目标列表并回到首点计算；跟随模式每次收集一个窗口的新波形。
+
+这些是工程起点，不是论文统一规定的最优时间。Lizarraga 等 2026 年的[直流电机位置控制实验](https://doi.org/10.3390/eng7080397)第 5.1 节采用每个候选总长 3 秒、0.5 秒时施加阶跃；位置环的设置不能直接当作当前速度环的最优值。软件内“方法与论文依据”写明参考范围。
 
 ## V1.6.8 更新
 
@@ -185,7 +208,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.6.6 正常应显示 **56 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.8.5 正常应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -273,15 +296,15 @@ V1.6.6 的 `get_ai_diagnosis` 返回 `diagnosis.notes`，保留 AI 的附加说�
 ### 场景三：MCP 连续 AI 调参
 
 1. 先确认用户希望进行连续调参，并确认设备实现方支持运行中改参。只有波形上传或停机改参能力时，不能据此声明支持连续调参，也不能由 AI 擅自修改能力声明来绕过限制。
-2. 调用 `prepare_continuous_tuning({})` 显示状态与操作提示。可通过配置工具提交安全范围、允许项、观察时长、轮数与总时限，经用户审阅保存；也可在“AI 权限设置 → 连续调参权限”中填写。运行中写入开关、目标安全范围和保护位于该页，Kff/Bff 的“连续”勾选位于前馈窗口“参数与判据”。随后用户点击主页面“连续调参”或前馈窗口底部入口，选择 **MCP**、测试方式、性能目标并核对确认。**prepare 只提示，不启动或授权；MCP 不能代替用户选择并启动 API。**
+2. 调用 `prepare_continuous_tuning({})` 显示状态与操作提示。可通过配置工具提交安全范围、允许项与观察时长，经用户审阅保存；也可在“AI 权限设置 → 连续调参权限”中填写。默认总时间和轮数不限，专家可选有限会话；目标只使用一套安全上下限。运行中写入开关、目标安全范围和保护位于该页，Kff/Bff 的“连续”勾选位于前馈窗口“参数与判据”。随后用户点击主页面“连续调参”或前馈窗口底部入口，选择 **MCP**、测试方式、性能目标并核对确认。**prepare 只提示，不启动或授权；MCP 不能代替用户选择并启动 API。**
 3. 调用 `get_continuous_tuning_state({})`。仅在 `active=true`、`state="active"` 且 `observation` 非空时，基于该观察、`evaluation`、`decision_parameter_ids` 与 `constraints` 决定参数。自动模式由软件执行固定轨迹，完整批次和结束读回核对前 `observation=null`，按状态等待；跟随模式等待新鲜同步窗口。历史选区不能代替实时观察。
 4. 调用 `apply_continuous_tuning_step`，传入连续会话 `session_id`、本轮唯一 `step_id`、最新 `observation.id` 作为 `observation_id`、数值候选 `values` 和具体依据 `reason`。`values` 只能包含 `decision_parameter_ids`，不能改目标轨迹。前馈多点模式仅包含 Kff/Bff，PID 固定不动。
 5. 只有 `readback_verified=true` 才表示本轮写入经应答和独立 GET 核对。随后等待新观察；自动模式必须完成同一轨迹的下一组复测，最后一轮候选也要复测。用户停止、超时或保护异常可提前中断，未完成的试验不能称为已验证效果。
-6. 达到目标、证据不足或需要结束时，调用 `stop_continuous_tuning`。失败或部分写入后先核对当前状态，不自动回滚或重复发送未知结果的请求。新一轮会话须由用户重新确认。
+6. 默认用户停止模式下，达到目标可调用 `observe_continuous_tuning(session_id, observation_id, reason)` 保持参数并重新采样；旧观察失效，等待新完整观察，性能变差时再调整。用户要求结束或无法继续取得可信证据时调用 `stop_continuous_tuning`；有限模式仍受本次预算约束。失败或部分写入先核对当前状态，不自动回滚或重复发送未知结果的请求。新会话须用户重新确认。
 
-连续会话确认后，合法步骤不再逐轮弹确认；仍受设备边界、两套用途权限、本次安全范围、时间 / 轮数上限、遥测质量、写入应答和读回检查。软件的“停止写入”只停止后续命令，**不能代替设备的物理急停**。
+连续会话确认后，合法步骤不再逐轮弹确认；仍受设备边界、两套用途权限、本次目标安全范围、显式启用的时间 / 轮数上限、遥测质量、写入应答和读回检查。软件的“停止写入”只停止后续命令，**不能代替设备的物理急停**。
 
-API 模式由软件自行调用已保存的模型与密钥，完整有效组最多分析一次，保持观察也占分析预算；采样等待和末轮复测不额外请求模型。目标轨迹切换是另外的目标写入，不占参数调整轮数，但受相同目标单次上限和总时限限制。相对评分、AI 的 complete 建议和本地“达到验收阈值”是不同结论，应按实际证据报告。
+API 模式由软件调用已保存的模型与密钥，每个完整有效批次最多分析一次；默认持续运行到用户停止，保持观察也会消耗 API 用量，有限模式按原分析预算计数。采样等待和末轮复测不额外请求模型；过期建议丢弃并重新采样。目标轨迹切换另计目标写入，受安全范围和单次上限约束。相对评分、AI 的 complete 建议和实测验收是不同结论；默认模式中达到目标后保持参数继续观察。
 
 ### 场景四：设计和调整 PID 线性前馈
 
@@ -325,9 +348,9 @@ MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`
 
 连续调参的 `session_id` 要取自 `get_continuous_tuning_state`，不是状态页里的实验 ID。`observation_id` 取当前 `observation.id`。每轮 `step_id` 必须唯一；同一 ID 只能对应完全相同的请求。结果不确定时查询原操作，不更换 ID 重发。
 
-## MCP 工具速查：56 个
+## MCP 工具速查：57 个
 
-`—` 表示无输入参数。下表是 V1.8.0 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表是 V1.8.5 的工具索引；调用时以客户端提供的实际工具 schema 为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
@@ -364,6 +387,7 @@ MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`
 | `emergency_stop` | — | 取消排队操作、停止后续参数下发，不是物理急停 |
 | `prepare_continuous_tuning` | — | 显示连续调参提示，等待用户设置和确认 |
 | `get_continuous_tuning_state` | — | 连续授权、计划、约束、实际值与新观察 |
+| `observe_continuous_tuning` | `session_id`、`observation_id`、`reason` | 保持参数并丢弃当前观察，重新收集完整新窗口；不调用软件 API 或扩大授权 |
 | `apply_continuous_tuning_step` | `session_id`、`step_id`、`observation_id`、`values`、`reason` | 执行用户已授权会话内的一轮有界写入并独立读回 |
 | `stop_continuous_tuning` | `session_id`；可选 `reason` | 结束本次连续会话，不自动恢复旧参数 |
 | `list_serial_ports` | — | 扫描端口、说明和硬件标识，不打开串口 |
