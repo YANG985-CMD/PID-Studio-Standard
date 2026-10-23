@@ -23,13 +23,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.8.15**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本：**V1.8.16**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.15/PIDStudio_Standard_App_V1.8.15_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.15/PIDStudio_Standard_MCP_V1.8.15_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.15/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.16/PIDStudio_Standard_App_V1.8.16_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.16/PIDStudio_Standard_MCP_V1.8.16_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.16/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -50,6 +50,14 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 - 改善持续采集后的密集曲线绘制、鼠标读数和重复界面排版。仅更新有新数据的通道，鼠标复用显示快照，保留峰值显示、完整实验保存和分析样本。
 - “启动连续调参”与左侧前馈设计按钮统一为金色；结果页按钮名称更明确。
 - GUI / MCP 均为 **V1.8.15**，**57 个工具 / 5 个资源**。V1.8.13 完整离线回归 872 项通过，后续卡片、启动与切换检查通过；独立程序、MCP 版本、包内容和安装文件核对一致。本次汇总 V1.8.12～V1.8.15 的更新。
+
+## V1.8.16 更新
+
+- 新增“静态稳定（固定当前工况）”：保持目标值不变，目标值和实际值连续稳定后才交给 AI 调 PID。
+- 新增“使用者调节工况（稳定后调 PID）”：使用者手动切换目标值，每个工况稳定后 AI 根据该工况数据调整 PID，AI 不修改目标值。
+- 波形诊断增加“自动识别 / 静态稳定 / 使用者调节工况”数据方式，明确稳定段和目标变化段的证据边界。
+- 依据 Nakamoto（2003）面向稳态过程的迭代反馈整定，以及 Hjalmarsson 等（1998）闭环迭代调参思路，详见软件包内 `docs/FIXES_V1.8.16.md`。
+- GUI / MCP 均为 **V1.8.16**，**57 个工具 / 5 个资源**；设备边界、权限、运行保护、ACK 和独立读回继续有效。
 
 ## V1.8.11 更新
 
