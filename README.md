@@ -23,13 +23,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.8.16**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本：**V1.8.17**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.16/PIDStudio_Standard_App_V1.8.16_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.16/PIDStudio_Standard_MCP_V1.8.16_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.16/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.17/PIDStudio_Standard_App_V1.8.17_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.17/PIDStudio_Standard_MCP_V1.8.17_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.17/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -43,6 +43,15 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 小红书、B站、抖音搜索：**电机的主人**。
 
+## V1.8.17 更新
+
+- “静态稳定（固定目标调 PID）”保持目标值不变，利用完整新波形改善实际值的波动与跟踪误差。静态稳定是调参目标，无需先稳定，也无需额外确认已稳定。
+- “使用者调节工况（AI 调 PID）”由使用者手动切换目标值，软件自动采集新工况的完整波形；波动明显或固定偏差较大时同样可以分析和调整 PID。AI 不修改目标值，工况变化后旧建议不会写入。
+- 改参并读回后重新采样，稳定容差与连续稳定观察只作评价。波形诊断、API 和 MCP 的说明与执行一致；状态直接显示采样进度、误差和波动，等待采样使用有限滚动窗口。
+- 修正自动调节模式的 PID 人工单次上限输入框刷新时误启用的问题；自动 PID 继续取消单次变化上限，目标值和前馈按原权限独立控制。
+- 借鉴 Nakamoto（2003）面向固定工况的闭环性能评价与 Hjalmarsson 等（1998）利用闭环数据迭代改善控制器的思路，采用部分见“方法与论文依据”和随包文档。
+- GUI / MCP 均为 **V1.8.17**，**57 个工具 / 5 个资源**；**890 项完整离线回归通过**，最终卡片专项检查、独立启动、MCP 握手和程序包校验通过。
+
 ## V1.8.15 更新
 
 - 自动管理模式取消 P/I/D 单次变化上限，旧人工上限、手动滑条步长乘十及自动参考幅度均不拦截合法 PID 候选。API/MCP 共用此行为；固定 PID 模式、目标值阶跃和前馈参数仍执行各自数值上限，设备边界、自动搜索范围、配置写入刻度和运行保护继续有效。
@@ -50,14 +59,6 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 - 改善持续采集后的密集曲线绘制、鼠标读数和重复界面排版。仅更新有新数据的通道，鼠标复用显示快照，保留峰值显示、完整实验保存和分析样本。
 - “启动连续调参”与左侧前馈设计按钮统一为金色；结果页按钮名称更明确。
 - GUI / MCP 均为 **V1.8.15**，**57 个工具 / 5 个资源**。V1.8.13 完整离线回归 872 项通过，后续卡片、启动与切换检查通过；独立程序、MCP 版本、包内容和安装文件核对一致。本次汇总 V1.8.12～V1.8.15 的更新。
-
-## V1.8.16 更新
-
-- 新增“静态稳定（固定当前工况）”：保持目标值不变，目标值和实际值连续稳定后才交给 AI 调 PID。
-- 新增“使用者调节工况（稳定后调 PID）”：使用者手动切换目标值，每个工况稳定后 AI 根据该工况数据调整 PID，AI 不修改目标值。
-- 波形诊断增加“自动识别 / 静态稳定 / 使用者调节工况”数据方式，明确稳定段和目标变化段的证据边界。
-- 依据 Nakamoto（2003）面向稳态过程的迭代反馈整定，以及 Hjalmarsson 等（1998）闭环迭代调参思路，详见软件包内 `docs/FIXES_V1.8.16.md`。
-- GUI / MCP 均为 **V1.8.16**，**57 个工具 / 5 个资源**；设备边界、权限、运行保护、ACK 和独立读回继续有效。
 
 ## V1.8.11 更新
 
@@ -116,9 +117,13 @@ PID 局部搜索区间在完整同条件改参复测、末尾读回核对通过�
 | 自动阶跃（推荐） | 读取当前参数后完成 A→B→A，完整响应后评价超调、误差、稳定时间与波动，调整后重复 | Hjalmarsson 等，1998，[Iterative feedback tuning: theory and applications](https://doi.org/10.1109/37.710876)：借鉴闭环试验、固定性能准则和受限迭代，用相同测试比较调整前后效果 |
 | 多目标综合（高级） | 按用户填写的 3～8 个不同目标测试并回到首点，同一组参数兼顾平均和最差表现 | Neumann-Brosig 等，2020，[Data-Efficient Autotuning With Bayesian Optimization: An Industrial Control Study](https://doi.org/10.1109/TCST.2018.2886159)：借鉴试验成本、历史评价与数据效率，将多工况实测表现汇总为统一指标 |
 | 跟随实际工况（高级） | 软件不改目标，依据用户或板端给定工况的新鲜波形小幅调参 | Hjalmarsson 等，1998，[IFT 论文](https://doi.org/10.1109/37.710876)：借鉴利用闭环运行数据迭代改善的思路，结合当前工况波形提出受限参数建议 |
+| 静态稳定（固定目标调 PID） | 保持目标值，完整新波形交给 AI 改善波动和误差；无需先稳定，也无需额外确认 | Nakamoto，2003，[An Application of Iterative Feedback Tuning for a Process Control](https://doi.org/10.9746/sicetr1965.39.924)：借鉴固定工况下的闭环性能评价，用同一目标下的新数据比较 PID 调整效果 |
+| 使用者调节工况（AI 调 PID） | 使用者手动改目标，软件自动重新采集该工况的完整波形，AI 只调 PID；波动不阻止分析 | Hjalmarsson 等，1998，[IFT 论文](https://doi.org/10.1109/37.710876)：借鉴利用闭环数据迭代改善控制器的思路，各目标值分别采样、分析 |
 | 前馈多点整定 | 从前馈入口启动，固定 PID，多点稳定采集、拟合与评价，仅修正 Kff/Bff 后复测 | van der Meulen 等，2008，[Fixed Structure Feedforward Controller Design Exploiting Iterative Trials](https://doi.org/10.1115/1.2957626)：借鉴固定结构前馈与重复试验，用于静态 Kff×SP+Bff 的多点拟合、误差评价与复测 |
 
 每种自动模式使用固定工程权重评价跟踪误差、超调、稳定时间、末段波动及输出饱和；全组兼顾平均与最差段，评分越低越好。高级设置中的验收阈值只由实测结果核对。数据不足时等待新的完整观察；完整响应尚未稳定时仍可继续调整，明确显示“未稳定”，不伪造零秒稳定时间。跟随模式不使用自动阶跃验收阈值。
+
+静态和使用者工况模式中，“静态”表示当前目标值固定，实际值是否平稳是改善指标。`stability.stable=false` 也可交给 AI 调 PID；软件只等待完整、新鲜、同步的当前目标数据，不要求用户先消除波动。目标值变化后自动重新采样。
 
 保护设计参考 Berkenkamp 等，ICRA 2016，[Safe Controller Optimization for Quadrotors with Gaussian Processes](https://doi.org/10.1109/ICRA.2016.7487170) 从已知可用参数出发、在运行约束内逐步探索的思路，结合权限、设备范围、调节幅度、新鲜遥测、ACK 与独立读回管理每次调整。
 
@@ -254,7 +259,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.8.15 正常应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.8.17 正常应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
