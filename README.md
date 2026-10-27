@@ -23,13 +23,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.8.17**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本：**V1.8.19**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.17/PIDStudio_Standard_App_V1.8.17_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.17/PIDStudio_Standard_MCP_V1.8.17_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.17/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.19/PIDStudio_Standard_App_V1.8.19_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.19/PIDStudio_Standard_MCP_V1.8.19_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.19/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -42,6 +42,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.8.19 更新
+
+- 新增“触发调参（工况变化 / 手动）”：目标值改变后自动采集，也可以在连续调参状态卡片下点击“采集并调参一次”。自动与手动采集时长分别可选 2、4、8、15 秒或自定义 2～60 秒。
+- 每次触发重新读取设备实际参数，采集触发后的完整新波形，完成一次 AI 分析和 PID 决策后回到等待状态；等待时不调用 AI、不积累待分析数据。
+- 目标值再次改变会使旧观察和旧建议失效；自动触发以 SP 通道变化为准，负载等其他变化可手动触发。API、MCP 和软件内状态卡片同步显示触发阶段。
+- GUI / MCP 均为 **V1.8.19**，**57 个工具 / 5 个资源**；**912 项完整离线回归通过**，隔离启动、MCP 握手、程序包和 SHA256 校验完成。未连接真实设备或调用真实 AI。
 
 ## V1.8.17 更新
 
