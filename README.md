@@ -13,6 +13,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | 使用方式 | 谁进行分析 | 需要什么 |
 | --- | --- | --- |
 | 手动调参、查看波形、记录实验 | 用户操作软件 | 只需软件，设备实现对应协议 |
+| 本地自动整定 | 软件在本地计算候选参数并复测 | 设备支持参数读写，确认试验工况和控制周期 |
 | 软件内“诊断选定波形” | 软件调用用户配置的 AI API | 在软件的“API 设置”中配置服务和模型 |
 | 连续调参选择 API | 软件内已配置的模型 | 使用对应 API 账户的 Token；先保存连续权限并确认会话 |
 | 外部 AI 通过 MCP 查看、诊断或连续调参 | 当前 MCP 客户端里的 AI | 软件、配套 MCP、支持 MCP 的 AI 客户端；无需在软件里额外配置模型 API |
@@ -23,13 +24,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.8.19**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本：**V1.9.0**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.19/PIDStudio_Standard_App_V1.8.19_Windows.zip) | PID 参数调试、实时波形、AI 诊断与 API 连续调参 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.19/PIDStudio_Standard_MCP_V1.8.19_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.8.19/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.9.0/PIDStudio_Standard_App_V1.9.0_Windows.zip) | 实时波形、PID 调试、AI 诊断与本地自动整定 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.9.0/PIDStudio_Standard_MCP_V1.9.0_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.9.0/SHA256SUMS.txt) | 核对下载文件完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -42,6 +43,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.9.0 更新
+
+- 新增“本地自动整定（免 Token）”。在软件中选择目标 A、B，按 A → B → A 采集响应。软件用控制输出和反馈辨识模型，计算 P、PI 或 PID 候选参数。
+- 候选通过模型响应和设备范围检查后，软件写入并独立读回，再用同一条轨迹复测。复测表现下降时恢复原参数，再测一轮。
+- 配套 MCP 可读取本地整定状态和结果。AI 波形诊断、API / MCP 连续调参和触发调参入口仍可使用。
+- 软件与 MCP 均为 V1.9.0。离线回归通过 953 项。
 
 ## V1.8.19 更新
 
@@ -266,7 +274,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.8.17 正常应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。V1.9.0 应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
