@@ -14,6 +14,7 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | --- | --- | --- |
 | 手动调参、查看波形、记录实验 | 用户操作软件 | 只需软件，设备实现对应协议 |
 | 本地自动整定 | 软件在本地计算候选参数并复测 | 设备支持参数读写，确认试验工况和控制周期 |
+| 请 AI 帮我配置 | 外部 AI 根据你提供的协议或固件，核对已保存的通道、参数及试验方案 | 安装软件与配套 MCP，串口关闭时即可准备 |
 | 软件内“诊断选定波形” | 软件调用用户配置的 AI API | 在软件的“API 设置”中配置服务和模型 |
 | 连续调参选择 API | 软件内已配置的模型 | 使用对应 API 账户的 Token；先保存连续权限并确认会话 |
 | 外部 AI 通过 MCP 查看、诊断或连续调参 | 当前 MCP 客户端里的 AI | 软件、配套 MCP、支持 MCP 的 AI 客户端；无需在软件里额外配置模型 API |
@@ -24,13 +25,13 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 ## Windows 下载
 
-当前版本：**V1.9.0**，Windows x64。升级前正常退出软件，保留原 `user_data_standard` 文件夹；同时更新 GUI 与 MCP，更新后重载 MCP 客户端。
+当前版本为 **V1.10.8**，适用 Windows x64。升级前正常退出软件并保留原 `user_data_standard` 文件夹。使用外部 AI 时，同时更新软件与 MCP，再重新加载客户端。
 
 | 下载 | 用途 |
 | --- | --- |
-| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.9.0/PIDStudio_Standard_App_V1.9.0_Windows.zip) | 实时波形、PID 调试、AI 诊断与本地自动整定 |
-| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.9.0/PIDStudio_Standard_MCP_V1.9.0_Windows.zip) | 供 Codex 等 MCP 客户端连接 PID Studio，包含固定试验与连续 AI 调参接口 |
-| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.9.0/SHA256SUMS.txt) | 核对下载文件完整性 |
+| [PID Studio 软件包](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.10.8/PIDStudio_Standard_App_V1.10.8_Windows.zip) | 实时波形、AI 诊断、连续调参，以及本地阶跃与扫频整定 |
+| [配套 MCP 程序](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.10.8/PIDStudio_Standard_MCP_V1.10.8_Windows.zip) | 让 Codex 等 AI 客户端帮助配置设备、准备本地整定方案、分析波形或进行已授权的连续调参 |
+| [SHA256 校验值](https://github.com/YANG985-CMD/PID-Studio-Standard/releases/download/v1.10.8/SHA256SUMS.txt) | 核对两个下载包的完整性 |
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
@@ -43,6 +44,20 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 | <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
 
 小红书、B站、抖音搜索：**电机的主人**。
+
+## V1.10.8 更新
+
+- MCP 可以根据「看波形」「AI 连续调参」「本地阶跃」「本地扫频」等用途检查设备配置，列出当前任务仍缺的资料，并提交修改供你审阅。
+- 在「AI 诊断 → 本地自动整定」中选好方法，点「下一步」即可离线设置并保存。实机扫频和导入板端同步扫频 CSV 都可选择 PI 或 PID。实机扫频计算多个工况共用的参数，并逐工况复测。
+- 软件与 MCP 均为 **V1.10.8**。1181 项离线测试通过，Windows 打包版通过启动、退出和 MCP 握手检查。
+
+## 第一次用 AI 配置
+
+把板端协议或相应的固件工程交给已接入 MCP 的 AI，告诉它你的目标。例如：
+
+> 我想先看目标值和实际值的波形，再做本地阶跃 PI 整定。请根据这份固件和已有配置准备方案。串口先保持关闭，资料中缺什么再问我。
+
+AI 可以核对通道顺序、单位、PID 参数地址和控制周期。你提供允许试验的目标值和范围，在软件弹出的窗口核对改动并点「确认保存」。准备上机时，再打开串口，到「AI 诊断 → 本地自动整定」中启动已保存的方案。
 
 ## V1.9.0 更新
 
@@ -136,7 +151,7 @@ PID 局部搜索区间在完整同条件改参复测、末尾读回核对通过�
 | 使用者调节工况（AI 调 PID） | 使用者手动改目标，软件自动重新采集该工况的完整波形，AI 只调 PID；波动不阻止分析 | Hjalmarsson 等，1998，[IFT 论文](https://doi.org/10.1109/37.710876)：借鉴利用闭环数据迭代改善控制器的思路，各目标值分别采样、分析 |
 | 前馈多点整定 | 从前馈入口启动，固定 PID，多点稳定采集、拟合与评价，仅修正 Kff/Bff 后复测 | van der Meulen 等，2008，[Fixed Structure Feedforward Controller Design Exploiting Iterative Trials](https://doi.org/10.1115/1.2957626)：借鉴固定结构前馈与重复试验，用于静态 Kff×SP+Bff 的多点拟合、误差评价与复测 |
 
-每种自动模式使用固定工程权重评价跟踪误差、超调、稳定时间、末段波动及输出饱和；全组兼顾平均与最差段，评分越低越好。高级设置中的验收阈值只由实测结果核对。数据不足时等待新的完整观察；完整响应尚未稳定时仍可继续调整，明确显示“未稳定”，不伪造零秒稳定时间。跟随模式不使用自动阶跃验收阈值。
+自动阶跃结合跟踪误差、超调、稳定时间、末段波动及输出饱和评价各段响应。界面评分为 0～100 分，越高越好。高级设置中的验收阈值由实测结果核对。数据不足时等待新的完整观察；波形仍有波动时可以继续调整。同一目标的静态观察按误差与波动评价。
 
 静态和使用者工况模式中，“静态”表示当前目标值固定，实际值是否平稳是改善指标。`stability.stable=false` 也可交给 AI 调 PID；软件只等待完整、新鲜、同步的当前目标数据，不要求用户先消除波动。目标值变化后自动重新采样。
 
@@ -274,7 +289,7 @@ args = ["--app", "D:/PIDStudio/PIDStudioStandard/PIDStudioStandard.exe", "--data
 }
 ```
 
-保存后重新加载 MCP 或重启 AI 客户端。V1.9.0 应显示 **57 个工具、5 个资源**。仅修改配置文件不会替换当前会话里已经启动的旧 MCP 进程，须以实际返回的版本为准。
+保存后重新加载 MCP 或重启 AI 客户端。调用 `get_studio_capabilities`，核对软件与 MCP 的版本均为 **1.10.8**，`versions_match` 为 `true`。本版提供 **60 个工具、5 个资源**。
 
 实验数据保存在软件旁的 `user_data_standard`，更新时保留此目录。发布包不包含用户实验、API Key 或企业授权。
 
@@ -309,6 +324,10 @@ V1.6.6 的 `get_ai_diagnosis` 返回 `diagnosis.notes`，保留 AI 的附加说�
 `task.roles` 中的目标值、实际值、控制输出若未关联，或协议缩放 / 单位明显不符，请先让用户核对配置。设备上下限、AI 允许范围、步长、单次变化限制及目标安全范围以当前返回结果为准，不照搬示例。
 
 ### 通过 MCP 配置和连接设备
+
+可先给 `get_device_configuration` 传入 `purpose`。查看概况用 `overview`，看波形用 `waveform`，AI 连续调参用 `continuous`，本地阶跃或扫频分别用 `local_step`、`local_sweep`。`result.setup_guide` 返回当前配置的待补项和下一步。
+
+准备本地试验时，调用 `get_local_tuning_setup` 读取 `step` 或 `frequency` 方案。用该方案的 `setup_revision` 作为 `expected_revision`，把需要变更的字段交给 `validate_local_tuning_setup` 预览，再以相同版本与字段调用 `configure_local_tuning_setup` 并说明原因。用户在软件审阅后，用 `get_operation` 查询原回执是否已保存。板端系数定义由当前任务的两种方案共用。
 
 1. 调用 `get_device_configuration`，取 `result.configuration` 的完整配置副本及 `result.configuration_revision`。它包含串口、全部通道与参数、控制关联、设备能力、安全限制，以及诊断和连续调参两套 AI 权限，不返回密钥。
 2. 依据实际固件和用户请求修改副本，保留其余字段。将完整副本和读取时的版本传给 `validate_device_configuration(configuration, expected_revision)`，先检查全部变更。通道位置、参数地址、量程和运行中改参能力须有真实依据。
@@ -414,16 +433,19 @@ MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`
 
 连续调参的 `session_id` 要取自 `get_continuous_tuning_state`，不是状态页里的实验 ID。`observation_id` 取当前 `observation.id`。每轮 `step_id` 必须唯一；同一 ID 只能对应完全相同的请求。结果不确定时查询原操作，不更换 ID 重发。
 
-## MCP 工具速查：57 个
+## MCP 工具速查（60 个）
 
-`—` 表示无输入参数。下表是 V1.8.15 的工具索引；调用时以客户端提供的实际工具 schema 为准。
+`—` 表示无输入参数。下表列出 V1.10.8 的工具，调用参数以客户端展示的工具定义为准。
 
 | 工具 | 输入 | 用途 |
 | --- | --- | --- |
 | `open_studio` | — | 打开 / 连接软件，不打开串口 |
 | `get_studio_status` | — | 连接、采集、回放、任务、当前参数及后台操作状态 |
 | `get_device_definition` | — | 参数 ID、角色、协议、范围、读取选择及 AI 限制 |
-| `get_device_configuration` | — | 完整设备配置、版本摘要和当前能否编辑，不含密钥 |
+| `get_device_configuration` | 可选 `purpose` | 读取完整配置、配置版本和按用途生成的新手指引 |
+| `get_local_tuning_setup` | `method` | 读取阶跃（`step`）或扫频（`frequency`）方案、待核对项和方案版本 |
+| `validate_local_tuning_setup` | `method`、`expected_revision`、`settings` | 离线预览本地试验设置的改动 |
+| `configure_local_tuning_setup` | `method`、`expected_revision`、`settings`、`reason` | 将方案改动送到软件里，用户审阅并确认保存 |
 | `validate_device_configuration` | `configuration`、`expected_revision` | 校验完整配置并列出全部变更，不保存 |
 | `configure_device` | `configuration`、`expected_revision`、`reason` | 显示逐项变更，须用户在软件确认后保存 |
 | `connect_device` | `device_id`、`expected_revision` | 打开当前设备已保存串口，成功后正常采集，不授予写入 |
@@ -437,7 +459,7 @@ MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`
 | `import_project_parameters` | `device_id`、`source_folder`、`sources`、非空 `parameters` | 基于 AI 已阅读的真实工程导入定义或暂存建议；须断开且空闲，不写设备、不授予 AI 权限 |
 | `read_parameters` | 可选 `ids` | 读取指定 ID，省略时读参数页勾选项 |
 | `write_parameters` | `values` | 校验并暂存单次候选，真实设备仍须用户确认 |
-| `get_waveform` | 可选 `max_points`，默认 200，范围 10–2000 | 获取均匀抽样的波形预览及质量信息 |
+| `get_waveform` | 可选 `max_points`，默认 200，范围 10–2000 | 读取当前选区的均匀预览、完整选区的有效极值、原始时间和样本质量 |
 | `set_analysis_interval` | 可选 `start_seconds`、`end_seconds` | 设置相对时间选区；两项都省略则清除 |
 | `analyze_waveform` | — | 计算当前选区 / 显示缓冲区的本地指标 |
 | `get_linear_feedforward_state` | — | 读取已保存前馈映射、参数和两套用途约束，不读取设备 |
@@ -486,7 +508,7 @@ MCP 配置字段位于完整设备配置的 `linear_feedforward[实际 task_id]`
 | --- | --- |
 | `pidstudio://status` | 软件当前状态 |
 | `pidstudio://device` | 当前设备定义 |
-| `pidstudio://capabilities` | 版本与能力 |
+| `pidstudio://capabilities` | 版本、能力和离线配置指引入口 |
 | `pidstudio://ai` | 模型选项与凭据配置状态，不含密钥 |
 | `pidstudio://protocols` | 三种接收格式及接入示例目录 |
 
