@@ -35,14 +35,6 @@ PID Studio 是 Windows 串口波形与 PID 参数调试软件，适用于已实�
 
 全部版本见 [发布页](https://github.com/YANG985-CMD/PID-Studio-Standard/releases)。
 
-## 支持作者
-
-**为爱发电，有条件的可以支持一下回回血，感谢**
-
-| 支付宝 |
-| :---: |
-| <a href="assets/support/alipay.jpg"><img src="assets/support/alipay.jpg" width="280" alt="支付宝收款码"></a> |
-
 小红书、B站、抖音搜索：**电机的主人**。
 
 ## V1.10.8 更新
